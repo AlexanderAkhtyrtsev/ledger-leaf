@@ -1,6 +1,7 @@
-import {getAuth, onAuthStateChanged} from 'firebase/auth';
+import {getAuth, onAuthStateChanged, signOut} from 'firebase/auth';
 import {app} from '@/firebase/index';
 import store from '@/store';
+import { getFirestore, doc, setDoc, getDoc, updateDoc } from 'firebase/firestore';
 
 export const auth = getAuth(app);
 
@@ -19,6 +20,18 @@ onAuthStateChanged(auth, (user) => {
 });
 
 
+export async function logout() {
+    return signOut(auth)
+        .then(() => {
+            console.log('User logged out');
+            return true;
+        })
+        .catch((error) => {
+            console.error('Error logging out:', error);
+            return false;
+        });
+}
+
 export function checkAuthState() {
     return new Promise((resolve, reject) => {
         onAuthStateChanged(auth, (user) => {
@@ -29,4 +42,28 @@ export function checkAuthState() {
             }
         });
     });
+}
+
+export async function storeUser(user) {
+
+    // Create a document reference in Firestore
+    const userRef = doc(getFirestore(), 'users', user.uid);
+
+    // Check if the user already exists in Firestore
+    const userDoc = await getDoc(userRef);
+
+    if (!userDoc.exists()) {
+        // If user doesn't exist, store the user data
+        await setDoc(userRef, {
+            uid: user.uid,
+            email: user.email,
+            displayName: user.displayName,
+            lastLogin: new Date(),
+        });
+        console.log('User data saved to Firestore');
+    } else {
+        await updateDoc(userRef, {
+            lastLogin: new Date(),
+        });
+    }
 }

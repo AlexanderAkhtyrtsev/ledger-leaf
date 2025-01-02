@@ -1,7 +1,9 @@
 <script setup>
-import {auth, provider} from '@/firebase/auth';
+import {auth, provider, storeUser} from '@/firebase/auth';
 import {GoogleAuthProvider, signInWithPopup} from 'firebase/auth';
+import {useRouter} from 'vue-router';
 
+const router = useRouter();
 function signInWithGoogle() {
   signInWithPopup(auth, provider)
       .then((result) => {
@@ -11,8 +13,11 @@ function signInWithGoogle() {
         // The signed-in user info.
         const user = result.user;
         console.log(user)
-        // IdP data available using getAdditionalUserInfo(result)
-        // ...
+
+        router.push('/')
+
+        storeUser(user);
+
       }).catch((error) => {
     // Handle Errors here.
     const errorCode = error.code;
