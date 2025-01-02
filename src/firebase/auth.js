@@ -1,7 +1,8 @@
 import {getAuth, onAuthStateChanged, signOut} from 'firebase/auth';
 import {app} from '@/firebase/index';
 import store from '@/store';
-import { getFirestore, doc, setDoc, getDoc, updateDoc } from 'firebase/firestore';
+import { doc, setDoc, getDoc, updateDoc } from 'firebase/firestore';
+import {db} from '@/firebase';
 
 export const auth = getAuth(app);
 
@@ -47,7 +48,7 @@ export function checkAuthState() {
 export async function storeUser(user) {
 
     // Create a document reference in Firestore
-    const userRef = doc(getFirestore(), 'users', user.uid);
+    const userRef = doc(db, 'users', user.uid);
 
     // Check if the user already exists in Firestore
     const userDoc = await getDoc(userRef);

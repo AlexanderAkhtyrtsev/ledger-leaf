@@ -8,12 +8,25 @@ import {useRouter} from 'vue-router';
 const store = useStore();
 const router = useRouter();
 
-const items = computed( () => [
-  { title: "Home", icon: "mdi-home", to: "/" },
-  { title: "Login", icon: "mdi-login", to: "/login", show: () => !store.state.user },
-  { title: "Logout", icon: "mdi-logout", to: 'logout', click: () => logout().then( () => router.push('/login') ), show: () => store.state.user },
-  { title: "About", icon: "mdi-information-variant", to: "/about" },
-].filter( item => item.show === undefined || item.show() ));
+const isAuthenticated = computed(() => store.getters.isAuthenticated);
+
+
+const items = computed(() => [
+  {title: 'Home', icon: 'mdi-home', to: '/', requiresAuth: false},
+  {title: 'Accounts', icon: 'mdi-account', to: '/accounts', requiresAuth: true},
+  {title: 'Transactions', icon: 'mdi-cash', to: '/transactions', requiresAuth: true},
+  {title: 'Categories', icon: 'mdi-format-list-bulleted', to: '/categories', requiresAuth: true},
+  {title: 'Reports', icon: 'mdi-chart-bar', to: '/reports', requiresAuth: true},
+  {title: 'Login', icon: 'mdi-login', to: '/login', requiresAuth: false, show: !isAuthenticated.value},
+  {title: 'About', icon: 'mdi-information-variant', to: '/about'},
+  {
+    title: 'Logout',
+    icon: 'mdi-logout',
+    to: 'logout',
+    requiresAuth: true,
+    click: () => logout().then(() => router.push('/login')),
+  },
+].filter(item => (!item.requiresAuth || isAuthenticated.value) && item.show !== false));
 
 const model = defineModel();
 

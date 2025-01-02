@@ -1,6 +1,7 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
 import Home from '../views/Home.vue'
 import {checkAuthState} from '@/firebase/auth';
+import Accounts from '@/components/core/Accounts.vue';
 
 const routes = [
   {
@@ -8,6 +9,18 @@ const routes = [
     name: 'home',
     meta: { requiresAuth: false, },
     component: Home,
+  },
+  {
+    path: '/accounts',
+    name: 'accounts',
+    meta: { requiresAuth: true, },
+    component: Accounts,
+  },
+  {
+    path: '/categories',
+    name: 'categories',
+    meta: { requiresAuth: true, },
+    component: () => import(/* webpackChunkName: "about" */ '../components/core/Categories.vue'),
   },
   {
     path: '/about',

@@ -1,14 +1,8 @@
 <template>
   <v-app>
-    <!-- Navbar -->
-    <v-app-bar app>
-      <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
-      <v-toolbar-title>Ledger Leaf 🌿</v-toolbar-title>
-    </v-app-bar>
-
+    <AppBar @toggle-drawer="drawer = !drawer" />
     <Sidebar v-model="drawer" />
 
-      <!-- Content -->
     <v-main>
       <v-container>
         <router-view />
@@ -18,9 +12,10 @@
 </template>
 
 <script setup>
-
 import Sidebar from '@/components/Sidebar.vue';
+import AppBar from '@/components/AppBar.vue';
 import {ref} from 'vue';
 
 const drawer = ref(false);
+
 </script>
