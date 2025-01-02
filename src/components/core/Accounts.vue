@@ -3,7 +3,7 @@
     <v-row v-if="accounts.length">
       <v-col v-for="account in accounts" :key="account.id" cols="12" md="4">
         <v-card>
-          <v-card-title>{{ account.accountName }}</v-card-title>
+          <v-card-title>{{ account.name }}</v-card-title>
           <v-card-subtitle>{{ account.currency }} - ${{ account.amount }}</v-card-subtitle>
           <v-card-text>
             <v-row>

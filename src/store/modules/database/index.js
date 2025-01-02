@@ -7,6 +7,7 @@ export default {
     state: () => ({
         accounts: [],
         categories: [],
+        transactions: [],
     }),
     actions: {
         async fetchAccounts({state} ) {
@@ -45,8 +46,6 @@ export default {
                     return r;
                 });
         },
-
-
         async fetchCategories({ state }) {
             try {
                 const user = auth.currentUser;
@@ -67,7 +66,6 @@ export default {
                 console.error('Error fetching parent categories:', error);
             }
         },
-
         async createCategory({state, dispatch}, data) {
             const user = auth.currentUser;
 
@@ -88,6 +86,49 @@ export default {
                 dispatch('fetchCategories')
                 return r;
             } );
+        },
+        
+        async fetchTransactions({state}) {
+            try {
+                const user = auth.currentUser;
+                if (!user) {
+                    console.error('No user is logged in');
+                    return [];
+                }
+
+                // Get the transactions for the current user
+                const q = query(collection(firestore, 'users', user.uid, 'transactions'));
+                const querySnapshot = await getDocs(q);
+
+                state.transactions = querySnapshot.docs.map(doc => ({
+                    id: doc.id,
+                    ...doc.data(),
+                }));
+            } catch (error) {
+                console.error('Error fetching transactions:', error);
+            }
+        },
+        async createTransaction({state, dispatch}, transactionData) {
+            const user = auth.currentUser;
+            if (!user) {
+                console.error('No user is logged in');
+                return;
+            }
+
+            // Add the transaction to the 'transactions' collection under the user UID
+            return addDoc(
+                collection(
+                    firestore,
+                    'users',
+                    user.uid,
+                    'transactions',
+                ), transactionData,
+            ).then(r => {
+                dispatch('fetchTransactions');
+                return r;
+            }).catch(error => {
+                console.error('Error creating transaction:', error);
+            });
         },
     }
 }

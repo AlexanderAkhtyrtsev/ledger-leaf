@@ -5,7 +5,7 @@
       <v-card-text>
         <v-form v-model="formValid" @submit.prevent="createAccount">
           <v-text-field
-              v-model="accountName"
+              v-model="name"
               label="Account Name"
               :rules="[requiredRule]"
               required
@@ -46,7 +46,7 @@ export default {
   data() {
     return {
       dialog: false,
-      accountName: '',
+      name: '',
       currency: '',
       amount: 0,
       note: '',
@@ -60,7 +60,7 @@ export default {
     async createAccount() {
       try {
         this.$store.dispatch('database/createAccount', {
-          accountName: this.accountName,
+          name: this.name,
           currency: this.currency,
           amount: this.amount,
           note: this.note,
@@ -76,7 +76,7 @@ export default {
       }
     },
     resetForm() {
-      this.accountName = '';
+      this.name = '';
       this.currency = '';
       this.amount = 0;
       this.note = '';
