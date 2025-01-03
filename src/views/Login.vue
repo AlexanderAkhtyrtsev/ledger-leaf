@@ -2,6 +2,9 @@
 import {auth, provider, storeUser} from '@/firebase/auth';
 import {GoogleAuthProvider, signInWithPopup} from 'firebase/auth';
 import {useRouter} from 'vue-router';
+import {ref} from 'vue';
+
+const errorMessage = ref();
 
 const router = useRouter();
 function signInWithGoogle() {
@@ -19,20 +22,20 @@ function signInWithGoogle() {
         storeUser(user);
 
       }).catch((error) => {
-    // Handle Errors here.
-    const errorCode = error.code;
-    const errorMessage = error.message;
-    // The email of the user's account used.
-    const email = error.customData.email;
-    // The AuthCredential type that was used.
-    const credential = GoogleAuthProvider.credentialFromError(error);
-    // ...
-  });
+        errorMessage.value = error.code + ': ' + error.message;
+      });
 }
 
 </script>
 
 <template>
+  <v-alert
+      v-if="errorMessage"
+      type="error"
+      @click="errorMessage = null"
+  >
+    {{ errorMessage }}
+  </v-alert>
   <v-container class="d-flex justify-center align-center" style="height: 100vh;">
     <v-card elevation="2" class="pa-5">
       <v-card-title class="justify-center">Sign In</v-card-title>
