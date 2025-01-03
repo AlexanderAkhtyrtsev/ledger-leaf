@@ -1,16 +1,18 @@
 <script setup>
 import eventBus from '@/eventBus';
 import {useRoute} from 'vue-router';
+import {computed} from 'vue';
 
 const route = useRoute();
 
-const actionIcons = [
+const actionIcons = computed( () => [
   {
     name: 'plus',
     icon: 'mdi-plus',
-    show: () => ['accounts'].includes(route.name),
-  }
-];
+    show: () => ['accounts', 'transactions', 'categories'].includes(route.name),
+  },
+].filter( icon => icon.show ? icon.show() : true) );
+
 
 </script>
 
@@ -18,13 +20,11 @@ const actionIcons = [
   <v-app-bar app>
     <v-app-bar-nav-icon @click="$emit('toggle-drawer')"></v-app-bar-nav-icon>
     <v-toolbar-title>Ledger Leaf 🌿</v-toolbar-title>
-
     <v-btn
         v-for="icon in actionIcons"
-        :v-if="icon.show()"
         icon
         @click="eventBus.emit(icon.name + 'BtnClicked')">
-      <v-icon>mdi-{{icon.name}}</v-icon>
+      <v-icon>{{icon.icon}}</v-icon>
     </v-btn>
   </v-app-bar>
 </template>

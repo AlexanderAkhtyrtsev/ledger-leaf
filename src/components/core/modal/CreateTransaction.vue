@@ -88,7 +88,7 @@ const accounts = computed(() => store.state.database.accounts);
 
 const createTransaction = () => {
   store.dispatch('database/createTransaction', {
-    amount: transaction.value.amount,
+    amount: +transaction.value.amount,
     categoryId: transaction.value.category,
     accountId: transaction.value.account,
     date: transaction.value.date,

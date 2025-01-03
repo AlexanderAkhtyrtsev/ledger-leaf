@@ -1,101 +1,92 @@
 <template>
   <v-container>
-    <!-- Filters -->
-    <v-row class="mb-4">
-      <v-col cols="12" md="4">
-        <v-text-field
-            v-model="filterText"
-            label="Search"
-            append-icon="mdi-magnify"
-            clearable
-        ></v-text-field>
-      </v-col>
-      <v-col cols="12" md="4">
-        <v-select
-            v-model="selectedCategory"
-            :items="categories"
-            item-title="name"
-            item-value="id"
-            label="Category"
-            clearable
-        ></v-select>
-      </v-col>
-      <v-col cols="12" md="4">
-        <v-select
-            v-model="selectedAccount"
-            :items="accounts"
-            item-title="name"
-            item-value="id"
-            label="Account"
-            clearable
-        ></v-select>
-      </v-col>
-    </v-row>
-
-    <!-- Transaction List -->
-    <v-list>
-      <v-list-item-group v-if="filteredTransactions.length">
-        <v-list-item
-            v-for="transaction in filteredTransactions"
-            :key="transaction.id"
-            @click="viewTransaction(transaction)"
+        <v-list lines="two"
+                v-for="(group, index) in groupedTransactions" :key="index"
         >
-          <v-list-item-content>
-            <v-list-item-title>
-              {{ transaction.amount }} - {{ transaction.categoryName }}
-            </v-list-item-title>
-            <v-list-item-subtitle>
-              {{ transaction.date }} | {{ transaction.name }}
-            </v-list-item-subtitle>
-          </v-list-item-content>
-        </v-list-item>
-      </v-list-item-group>
+          <v-list-item>
+            <template v-slot:prepend>
+              <v-list-subheader inset sticky>
+                {{ DateTime.fromJSDate(new Date(group.date)).toFormat('MMMM dd, yyyy') }}
+              </v-list-subheader>
+            </template>
+            <template v-slot:append>
+              <v-text style="color: red;"> {{ group.total.toFixed(2) }}</v-text>
+            </template>
+          </v-list-item>
 
-      <v-list-item v-if="!filteredTransactions.length">
-        <v-list-item-content>No transactions found.</v-list-item-content>
-      </v-list-item>
-    </v-list>
+          <v-divider inset></v-divider>
 
+          <v-list-item
+              v-for="transaction in group.transactions"
+              :key="transaction.id"
+              :subtitle="transaction.note ? (transaction.category ? transaction.category.name : 'Uncategorized') : ''"
+              :title="transaction.note || (transaction.category ? transaction.category.name : 'Uncategorized')"
+          >
+            <template v-slot:prepend>
+              <v-avatar>
+                <v-icon>{{ transaction.category?.icon }}</v-icon>
+              </v-avatar>
+            </template>
+
+            <template v-slot:append>
+              <v-text :style="{ color: transaction.amount > 0 ? 'green' : 'red' }">
+                {{ transaction.amount > 0 ? '+' : '' }}{{ formatCurrency(transaction.amount) }}
+              </v-text>
+            </template>
+
+          </v-list-item>
+        </v-list>
     <CreateTransaction />
   </v-container>
 </template>
 
 <script setup>
-import {ref, computed, onMounted} from 'vue';
+import {DateTime} from 'luxon';
+import {computed, onMounted} from 'vue';
 import {useStore} from 'vuex';
 import CreateTransaction from '@/components/core/modal/CreateTransaction.vue';
 
-const store = useStore()
-const filterText = ref('');
-const selectedCategory = ref(null);
-const selectedAccount = ref(null);
+const store = useStore();
 
+const transactions = computed(() => store.getters['database/transactions']);
 
-const categories = computed(() => store.state.database.categories);
-const accounts = computed(() => store.state.database.accounts);
+const groupedTransactions = computed(() => {
+  const grouped = {};
 
+  transactions.value
+      .sort((a, b) => b.date - a.date) // Sort transactions by date (latest first)
+      .forEach(transaction => {
+        const dateKey = DateTime.fromJSDate(transaction.date.toDate()).toISODate(); // Group by date
+        if (!grouped[dateKey]) {
+          grouped[dateKey] = {transactions: [], total: 0};
+        }
+        grouped[dateKey].transactions.push(transaction);
+        grouped[dateKey].total += transaction.amount < 0 ? transaction.amount : 0; // Sum only expenses
+      });
 
-const transactions = computed(() => store.state.database.transactions)
-
-// Filter transactions based on text search and selected filters
-const filteredTransactions = computed(() => {
-  return transactions.value.filter((transaction) => {
-    const matchesText =
-        transaction.note
-            .toLowerCase()
-            .includes(filterText.value.toLowerCase());
-
-    return matchesText;
-  });
+  return Object.entries(grouped).map(([date, {transactions, total}]) => ({
+    date,
+    transactions,
+    total
+  }));
 });
 
-onMounted( () => {
+const formatCurrency = (value, currency = '') => {
+  return new Intl.NumberFormat('en-US', {
+    style: 'decimal',
+    minimumFractionDigits: 2,
+  }).format(value);
+};
+
+store.dispatch('database/getExpenses');
+
+onMounted(() => {
   store.dispatch('database/fetchTransactions');
   store.dispatch('database/fetchAccounts');
   store.dispatch('database/fetchCategories');
-})
+});
 
-const viewTransaction = (transaction) => {
+const viewTransaction = transaction => {
   console.log('Viewing transaction:', transaction);
 };
 </script>
