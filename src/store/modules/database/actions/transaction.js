@@ -41,6 +41,7 @@ export default {
             ), transactionData,
         ).then(r => {
             dispatch('fetchTransactions');
+            dispatch('getExpenses');
             return r;
         }).catch(error => {
             console.error('Error creating transaction:', error);

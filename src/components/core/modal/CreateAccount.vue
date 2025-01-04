@@ -62,7 +62,7 @@ export default {
         this.$store.dispatch('database/createAccount', {
           name: this.name,
           currency: this.currency,
-          amount: this.amount,
+          amount: +this.amount,
           note: this.note,
           userId: this.$store.state.user.uid, // Link the account to the current user
           createdAt: new Date(),
