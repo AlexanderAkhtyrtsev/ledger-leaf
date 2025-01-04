@@ -31,10 +31,14 @@
       </v-card-text>
     </v-card>
   </v-container>
+
+  <Login v-if="!store.state.user"/>
 </template>
 
 <script setup>
-// No additional logic needed
+import Login from '@/views/Login.vue';
+import store from '@/store';
+
 </script>
 
 <style scoped>

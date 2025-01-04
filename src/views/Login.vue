@@ -36,7 +36,7 @@ function signInWithGoogle() {
   >
     {{ errorMessage }}
   </v-alert>
-  <v-container class="d-flex justify-center align-center" style="height: 100vh;">
+  <v-container class="d-flex justify-center align-center">
     <v-card elevation="2" class="pa-5">
       <v-card-title class="justify-center">Sign In</v-card-title>
       <v-card-text>
