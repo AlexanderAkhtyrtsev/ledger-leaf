@@ -19,8 +19,6 @@ export default {
                 id: doc.id,
                 ...doc.data(),
             }));
-
-            console.log(state.accounts)
         } catch (error) {
             console.error('Error fetching accounts:', error);
         }

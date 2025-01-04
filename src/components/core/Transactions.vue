@@ -44,6 +44,7 @@
 import {DateTime} from 'luxon';
 import {computed, onMounted} from 'vue';
 import {useStore} from 'vuex';
+import {formatCurrency} from '@/helpers';
 import CreateTransaction from '@/components/core/modal/CreateTransaction.vue';
 
 const store = useStore();
@@ -71,12 +72,6 @@ const groupedTransactions = computed(() => {
   }));
 });
 
-const formatCurrency = (value, currency = '') => {
-  return new Intl.NumberFormat('en-US', {
-    style: 'decimal',
-    minimumFractionDigits: 2,
-  }).format(value);
-};
 
 store.dispatch('database/getExpenses');
 

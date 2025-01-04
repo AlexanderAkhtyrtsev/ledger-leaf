@@ -8,6 +8,7 @@ export default {
         accounts: [],
         categories: [],
         transactions: [],
+        expenses: {},
     }),
 
     actions,

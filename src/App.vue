@@ -1,10 +1,11 @@
 <template>
   <v-app>
     <AppBar @toggle-drawer="drawer = !drawer" />
-    <Sidebar v-model="drawer" />
+    <Sidebar v-model="drawer" v-if="!loading"/>
 
     <v-main>
-      <v-container>
+      <v-progress-linear v-if="loading" indeterminate color="primary" />
+      <v-container v-else>
         <router-view />
       </v-container>
     </v-main>
@@ -14,8 +15,22 @@
 <script setup>
 import Sidebar from '@/components/Sidebar.vue';
 import AppBar from '@/components/AppBar.vue';
-import {ref} from 'vue';
+import {computed, ref, watch} from 'vue';
+import store from '@/store';
 
+const loading = ref(true);
 const drawer = ref(false);
+
+const user = computed( () => store.state.user );
+
+watch(user, (u) => {
+  store.dispatch('database/fetchData').then( () => {
+    loading.value = false;
+  }).catch( e => {
+    console.error(e);
+    loading.value = false;
+  })
+})
+
 
 </script>

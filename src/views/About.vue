@@ -10,7 +10,8 @@
 </template>
 
 <script setup>
-// No additional logic needed
+import {version} from '../../package.json'
+
 </script>
 
 <style scoped>
