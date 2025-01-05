@@ -25,7 +25,6 @@
 </template>
 
 <script>
-import eventBus from '@/eventBus';
 import CreateCategory from '@/components/core/modal/CreateCategory.vue';
 
 export default {

@@ -57,6 +57,7 @@
 
 <script>
 import eventBus from '@/eventBus';
+import {categoryIcons, findIconByKeyword} from '@/helpers/categories-icons';
 
 export default {
   data() {
@@ -68,10 +69,6 @@ export default {
       parentCategory: null, // ID of the parent category
       formValid: false,
       categoryTypes: ['must', 'need', 'want'], // Category types
-      icons: [
-        'mdi-bank', 'mdi-car', 'mdi-home', 'mdi-wallet', 'mdi-piggy-bank', 'mdi-cart',
-        // You can add more icons here from Material Design Icons (mdi)
-      ], // Icons list
       requiredRule: value => !!value || 'This field is required',
       optionalRule: value => true, // Optional field (parent category)
     };
@@ -79,7 +76,20 @@ export default {
   computed: {
     categories() {
       return this.$store.state.database.categories;
-    }
+    },
+    icons() {
+      if (this.categoryName) {
+        return Object.entries(categoryIcons)
+            .sort(([, keywords], [, keywords2]) => {
+              return keywords.toLowerCase().includes(this.categoryName.toLowerCase())
+                     && !keywords2.toLowerCase().includes(this.categoryName.toLowerCase())
+                     ? -1
+                     : 1
+            })
+            .map(([icon]) => icon)
+      }
+      return Object.keys(categoryIcons)
+    },
   },
   methods: {
     async createCategory() {
