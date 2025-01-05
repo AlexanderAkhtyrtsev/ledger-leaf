@@ -26,7 +26,13 @@ const routes = [
     path: '/categories',
     name: 'categories',
     meta: { requiresAuth: true, },
-    component: () => import(/* webpackChunkName: "about" */ '@/views//Categories.vue'),
+    component: () => import(/* webpackChunkName: "about" */ '@/views/Categories.vue'),
+  },
+  {
+    path: '/reports',
+    name: 'reports',
+    meta: { requiresAuth: true, },
+    component: () => import(/* webpackChunkName: "about" */ '@/views/Reports.vue'),
   },
   {
     path: '/settings',

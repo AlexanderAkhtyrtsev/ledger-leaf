@@ -1,46 +1,13 @@
 <template>
   <v-container>
-    <v-row v-if="accounts.length">
-      <v-col v-for="account in accounts" :key="account.id" cols="12" md="4">
-        <v-card>
-          <v-card-title>{{ account.name }}</v-card-title>
-          <v-card-subtitle>{{ formatCurrency(account.amount, account.currency) }}</v-card-subtitle>
-          <v-card-text>
-            <v-row>
-              <v-col v-if="account.note">Note: {{ account.note }}</v-col>
-              <v-col>
-                <v-btn @click="viewAccount(account.id)" color="primary" small>View</v-btn>
-              </v-col>
-            </v-row>
-          </v-card-text>
-        </v-card>
-      </v-col>
-    </v-row>
-    <div v-else >
-      <v-alert type="info">No accounts found</v-alert>
-    </div>
-
-    <CreateAccount />
-
+    <AccountsList />
   </v-container>
+
+  <CreateAccount />
 </template>
 
 
 <script setup>
-import {onMounted, computed} from 'vue';
-import {formatCurrency} from '@/helpers';
-import {useStore} from 'vuex';
 import CreateAccount from '@/views/components/modal/CreateAccount.vue';
-
-const store = useStore();
-const accounts = computed( () => store.getters['database/accounts'] );
-
-onMounted(async () => {
-  await store.dispatch('database/fetchAccounts');
-});
-
-
-function viewAccount(accountId) {
-  // Handle account view logic here
-}
+import AccountsList from '@/views/components/AccountsList.vue';
 </script>

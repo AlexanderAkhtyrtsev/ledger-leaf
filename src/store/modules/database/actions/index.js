@@ -18,7 +18,7 @@ export default {
         ]);
     },
 
-    async getExpenses({state} ) {
+    async getExpenses({state, commit} ) {
         const user = auth.currentUser;
         if (!user) {
             console.error('No user is logged in');
@@ -39,6 +39,7 @@ export default {
                 .then(r => r.data())
                 .catch(e => {
                     console.error('Error fetching expenses:', e);
+                    commit('addError', e.message, {root: true})
                     return {amount: 0};
                 });
 

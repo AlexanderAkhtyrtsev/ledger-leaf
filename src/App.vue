@@ -4,6 +4,14 @@
     <Sidebar v-model="drawer" v-if="!loading"/>
 
     <v-main>
+      <v-snackbar
+          color="error"
+          v-for="error in store.state.errors"
+          :model-value="true"
+      >
+        {{ error || 'Unknown Error' }}
+      </v-snackbar>
+
       <v-progress-linear v-if="loading" indeterminate color="primary" />
       <v-container v-else>
         <router-view />
@@ -23,7 +31,7 @@ const drawer = ref(false);
 
 const user = computed( () => store.state.user );
 
-watch(user, (u) => {
+watch(user, () => {
   store.dispatch('database/fetchData').then( () => {
     loading.value = false;
   }).catch( e => {
