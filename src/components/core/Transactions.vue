@@ -1,5 +1,6 @@
 <template>
   <v-container>
+    <v-infinite-scroll :items="groupedTransactions" :onLoad="loadMore">
         <v-list lines="two"
                 v-for="(group, index) in groupedTransactions" :key="index"
         >
@@ -10,7 +11,7 @@
               </v-list-subheader>
             </template>
             <template v-slot:append>
-              <v-text style="color: red;"> {{ group.total.toFixed(2) }}</v-text>
+              <div style="color: red;"> {{ group.total.toFixed(2) }}</div>
             </template>
           </v-list-item>
 
@@ -29,32 +30,33 @@
             </template>
 
             <template v-slot:append>
-              <v-text :style="{ color: transaction.amount > 0 ? 'green' : 'red' }">
+              <div :style="{ color: transaction.amount > 0 ? 'green' : 'red' }">
                 {{ transaction.amount > 0 ? '+' : '' }}{{ formatCurrency(transaction.amount, transaction.currency) }}
-              </v-text>
+              </div>
             </template>
 
           </v-list-item>
         </v-list>
+    </v-infinite-scroll>
     <CreateTransaction />
   </v-container>
 </template>
 
 <script setup>
 import {DateTime} from 'luxon';
-import {computed, onMounted} from 'vue';
-import {useStore} from 'vuex';
+import {computed, ref} from 'vue';
 import {formatCurrency} from '@/helpers';
 import CreateTransaction from '@/components/core/modal/CreateTransaction.vue';
+import store from '@/store'
 
-const store = useStore();
-
-const transactions = computed(() => store.getters['database/transactions']);
+const updateKey = ref(0);
 
 const groupedTransactions = computed(() => {
   const grouped = {};
 
-  transactions.value
+  updateKey.value++;
+
+  store.getters['database/transactions']
       .sort((a, b) => b.date - a.date) // Sort transactions by date (latest first)
       .forEach(transaction => {
         const dateKey = DateTime.fromJSDate(transaction.date.toDate()).toISODate(); // Group by date
@@ -71,6 +73,12 @@ const groupedTransactions = computed(() => {
     total
   }));
 });
+
+const loadMore = async ({done}) => {
+  await store.dispatch('database/fetchTransactions')
+  updateKey.value++;
+  done('ok')
+}
 
 const displayDescription = (transaction, isTitle) => {
   const category = (transaction.category ? transaction.category.name : `Transfer ${transaction.amount < 0 ? '<-' : '->'} ` + transaction.account.name);

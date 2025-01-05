@@ -6,7 +6,6 @@ export default {
         try {
             const {transactions, hasMore} = await getTransactions();
 
-            console.log(transactions, hasMore)
             state.transactions = transactions;
         } catch (error) {
             console.error('Error fetching transactions:', error);
