@@ -25,7 +25,7 @@
 </template>
 
 <script>
-import CreateCategory from '@/components/core/modal/CreateCategory.vue';
+import CreateCategory from '@/views/components/modal/CreateCategory.vue';
 
 export default {
   components: {

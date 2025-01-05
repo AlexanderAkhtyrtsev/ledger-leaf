@@ -46,7 +46,7 @@
 import {DateTime} from 'luxon';
 import {computed, ref} from 'vue';
 import {formatCurrency} from '@/helpers';
-import CreateTransaction from '@/components/core/modal/CreateTransaction.vue';
+import CreateTransaction from '@/views/components/modal/CreateTransaction.vue';
 import store from '@/store'
 
 const updateKey = ref(0);

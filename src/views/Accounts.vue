@@ -30,7 +30,7 @@
 import {onMounted, computed} from 'vue';
 import {formatCurrency} from '@/helpers';
 import {useStore} from 'vuex';
-import CreateAccount from '@/components/core/modal/CreateAccount.vue';
+import CreateAccount from '@/views/components/modal/CreateAccount.vue';
 
 const store = useStore();
 const accounts = computed( () => store.getters['database/accounts'] );

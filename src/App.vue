@@ -13,8 +13,8 @@
 </template>
 
 <script setup>
-import Sidebar from '@/components/Sidebar.vue';
-import AppBar from '@/components/AppBar.vue';
+import Sidebar from '@/views/components/Sidebar.vue';
+import AppBar from '@/views/components/AppBar.vue';
 import {computed, ref, watch} from 'vue';
 import store from '@/store';
 
