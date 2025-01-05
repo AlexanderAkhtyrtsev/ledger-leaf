@@ -1,25 +1,13 @@
 import {auth} from '@/firebase/auth';
-import {addDoc, collection, getDocs, orderBy, query} from 'firebase/firestore';
-import {db as firestore} from '@/firebase';
+import {createTransaction, getTransactions} from '@/firebase/db';
 
 export default {
     async fetchTransactions({state}) {
         try {
-            const user = auth.currentUser;
-            if (!user) {
-                console.error('No user is logged in');
-                return [];
-            }
+            const {transactions, hasMore} = await getTransactions();
 
-            // Get the transactions for the current user
-            const q = query(collection(firestore, 'users', user.uid, 'transactions'), orderBy('date', 'desc'));
-
-            const querySnapshot = await getDocs(q);
-
-            state.transactions = querySnapshot.docs.map(doc => ({
-                id: doc.id,
-                ...doc.data(),
-            }));
+            console.log(transactions, hasMore)
+            state.transactions = transactions;
         } catch (error) {
             console.error('Error fetching transactions:', error);
         }
@@ -32,14 +20,7 @@ export default {
         }
 
         // Add the transaction to the 'transactions' collection under the user UID
-        return addDoc(
-            collection(
-                firestore,
-                'users',
-                user.uid,
-                'transactions',
-            ), transactionData,
-        ).then(r => {
+        return createTransaction(transactionData).then(r => {
             dispatch('fetchTransactions');
             dispatch('getExpenses');
             return r;
