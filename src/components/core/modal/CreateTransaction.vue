@@ -59,7 +59,7 @@
       </v-card-text>
       <v-card-actions>
         <v-btn text @click="dialog = false">Cancel</v-btn>
-        <v-btn text color="primary" @click="createTransaction">Save</v-btn>
+        <v-btn text color="primary" :disabled="!isFormValid" @click="createTransaction">Save</v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>
@@ -83,12 +83,16 @@ const transaction = ref({
   note: '',
 });
 
+const isFormValid = computed(() => {
+  return ![transaction.value.amount, transaction.value.category, transaction.value.account].includes(null)
+});
+
 const categories = computed(() => store.state.database.categories);
 const accounts = computed(() => store.state.database.accounts);
 
 const createTransaction = () => {
   store.dispatch('database/createTransaction', {
-    amount: +transaction.value.amount,
+    amount: Math.abs(+transaction.value.amount) * -1,
     categoryId: transaction.value.category,
     accountId: transaction.value.account,
     date: transaction.value.date,

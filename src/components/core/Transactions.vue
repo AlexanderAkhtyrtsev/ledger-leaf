@@ -19,8 +19,8 @@
           <v-list-item
               v-for="transaction in group.transactions"
               :key="transaction.id"
-              :subtitle="transaction.note ? (transaction.category ? transaction.category.name : 'Uncategorized') : ''"
-              :title="transaction.note || (transaction.category ? transaction.category.name : 'Uncategorized')"
+              :subtitle="displayDescription(transaction)"
+              :title="displayDescription(transaction,true)"
           >
             <template v-slot:prepend>
               <v-avatar>
@@ -30,7 +30,7 @@
 
             <template v-slot:append>
               <v-text :style="{ color: transaction.amount > 0 ? 'green' : 'red' }">
-                {{ transaction.amount > 0 ? '+' : '' }}{{ formatCurrency(transaction.amount) }}
+                {{ transaction.amount > 0 ? '+' : '' }}{{ formatCurrency(transaction.amount, transaction.currency) }}
               </v-text>
             </template>
 
@@ -72,6 +72,14 @@ const groupedTransactions = computed(() => {
   }));
 });
 
+const displayDescription = (transaction, isTitle) => {
+  const category = (transaction.category ? transaction.category.name : `Transfer ${transaction.amount < 0 ? '<-' : '->'} ` + transaction.account.name);
+  if ( isTitle ) {
+    return transaction.note || category
+  }
+
+  return transaction.note ? category : ''
+}
 
 const viewTransaction = transaction => {
   console.log('Viewing transaction:', transaction);
