@@ -73,14 +73,6 @@ const groupedTransactions = computed(() => {
 });
 
 
-store.dispatch('database/getExpenses');
-
-onMounted(() => {
-  store.dispatch('database/fetchTransactions');
-  store.dispatch('database/fetchAccounts');
-  store.dispatch('database/fetchCategories');
-});
-
 const viewTransaction = transaction => {
   console.log('Viewing transaction:', transaction);
 };

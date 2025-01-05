@@ -1,5 +1,5 @@
 <script setup>
-import  "@/firebase/auth";
+import '@/firebase/auth';
 import {computed} from 'vue';
 import {useStore} from 'vuex';
 import {logout} from '@/firebase/auth';
@@ -17,6 +17,7 @@ const items = computed(() => [
   {title: 'Transactions', icon: 'mdi-cash', to: '/transactions', requiresAuth: true},
   {title: 'Categories', icon: 'mdi-format-list-bulleted', to: '/categories', requiresAuth: true},
   {title: 'Reports', icon: 'mdi-chart-bar', to: '/reports', requiresAuth: true},
+  {title: 'Settings', icon: 'mdi-cog', to: '/settings', requiresAuth: true},
   {title: 'Login', icon: 'mdi-login', to: '/login', requiresAuth: false, show: !isAuthenticated.value},
   {title: 'About', icon: 'mdi-information-variant', to: '/about'},
   {
