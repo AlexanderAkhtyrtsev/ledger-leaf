@@ -10,5 +10,7 @@ export default createVuetify({
     theme: {
         defaultTheme: 'dark'
     },
-    components: { VSnackbar }
+    components: {
+        VSnackbar
+    }
 })

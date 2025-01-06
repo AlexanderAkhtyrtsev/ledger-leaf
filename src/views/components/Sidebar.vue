@@ -54,7 +54,7 @@ const user = computed(() => store.state.user?.providerData?.[0])
     <v-list density="compact" nav>
       <v-list-item class="router-link"
                    v-for="item in items"
-                   :key="items.to"
+                   :key="item.to"
                    :prepend-icon="item.icon"
                    :title="item.title"
                    :value="item.title"

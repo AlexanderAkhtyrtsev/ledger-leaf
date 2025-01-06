@@ -1,5 +1,4 @@
 export default {
-    categories: state => state.categories,
     getCategoryById: state => id => state.categories.find(category => category.id === id),
     getAccountById: state => id => state.accounts.find(account => account.id === id),
     accounts: state => {
@@ -22,4 +21,28 @@ export default {
             account,
         };
     }),
+
+
+    categories: (state) => {
+        const sorted = state.categories.sort((a, b) => {
+            // Categories without parentId come first
+            if (!a.parentId && b.parentId) return -1;
+            if (a.parentId && !b.parentId) return 1;
+
+            // If both have or don't have parentId, sort alphabetically
+            return a.name.localeCompare(b.name);
+        });
+
+
+        // Convert flat list to tree
+        const buildTree = (parentId = null) =>
+            sorted
+                .filter((category) => category.parentId === parentId)
+                .map((category) => ({
+                    ...category,
+                    children: buildTree(category.id),
+                }));
+
+        return buildTree();
+    }
 }
