@@ -1,5 +1,5 @@
 import {auth} from '@/firebase/auth';
-import {addDoc, collection, getDocs, orderBy, query, startAfter, limit, updateDoc} from 'firebase/firestore';
+import {addDoc, collection, getDocs, doc, orderBy, query, startAfter, limit, updateDoc} from 'firebase/firestore';
 import {db, db as firestore} from '@/firebase/index';
 
 

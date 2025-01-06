@@ -18,7 +18,7 @@ export default {
     async updateCategory({state, getters}, {id, ...data}) {
         const category = getters.getCategoryById(id);
 
-        //await updateCategory(id, data)
+        await updateCategory(id, data);
 
         for(const field in data) {
             category[field] = data[field];
