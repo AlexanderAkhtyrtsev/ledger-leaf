@@ -18,7 +18,8 @@
 import {auth} from '@/firebase/auth';
 import AccountsList from '@/views/components/AccountsList.vue';
 import CategoriesList from '@/views/components/CategoriesList.vue';
+import {defineAsyncComponent} from 'vue';
 
-const Welcome = import( '@/views/components/Welcome.vue' );
+const Welcome = defineAsyncComponent( () => import( '@/views/components/Welcome.vue' ) );
 
 </script>

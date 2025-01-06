@@ -26,18 +26,20 @@ import AppBar from '@/views/components/AppBar.vue';
 import {computed, ref, watch} from 'vue';
 import store from '@/store';
 
-const loading = ref(true);
+const loading = ref(false);
 const drawer = ref(false);
 
 const user = computed( () => store.state.user );
 
 watch(user, () => {
-  store.dispatch('database/fetchData').then( () => {
-    loading.value = false;
-  }).catch( e => {
-    console.error(e);
-    loading.value = false;
-  })
+  if (!user.value) return;
+
+  store.dispatch('database/fetchData')
+      .then(() => {
+        loading.value = false;
+      })
+      .catch(e => store.commit('addError', e.message))
+      .finally(() => loading.value = false)
 })
 
 
