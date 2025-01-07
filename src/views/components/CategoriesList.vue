@@ -2,7 +2,7 @@
   <div>
     <Search v-model="filter" />
 
-    <div @drop="handleDrop" @dragover.prevent>
+    <v-row @drop="handleDrop" @dragover.prevent class="pb-10">
       <CategoryChip
           v-for="category in sortedCategories"
           :category="category"
@@ -10,7 +10,7 @@
           @drag-drop="handleDrop"
           :filter="filter"
       ></CategoryChip>
-    </div>
+    </v-row>
   </div>
 </template>
 

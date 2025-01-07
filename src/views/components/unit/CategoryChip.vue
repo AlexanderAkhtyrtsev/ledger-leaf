@@ -1,9 +1,9 @@
 <template>
   <span v-show="!category.parentId || matchesFilter">
-    <span @click="toggle">
+    <v-col @click="toggle" class="ma-0 pa-1">
     <v-chip
-        class="ma-3"
-        :size="category.children.length && !category.parentId ? 'x-large' : 'default'"
+        class="ma-0"
+        :size="category.children.length && !category.parentId ? 'default' : 'small'"
         :color="category.children.length && !category.parentId ? 'primary' : category.parentId ? 'success' : 'secondary'"
         label
         draggable
@@ -23,12 +23,12 @@
       > </v-badge>
     </v-chip>
 
-    </span>
+    </v-col>
 
     <CategoryChip v-if="category.children.length"
                   v-for="child in category.children"
                   :category="child"
-                  v-show="showChildren || filter"
+                  v-show="showChildren"
                   :filter="filter"
                   @drag-start="emit('drag-start', $event)"
                   @drag-drop="emit('drag-drop', $event)">
