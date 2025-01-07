@@ -71,6 +71,8 @@ const sortedCategories = computed(() => {
     // Prioritize parents with matching children or themselves
     if (aMatches && !bMatches) return -1;
     if (!aMatches && bMatches) return 1;
+    if ( a.children.length && !b.children.length) return -1;
+    if ( !a.children.length && b.children.length) return 1;
 
     // Sort alphabetically if both or neither match
     return a.name.localeCompare(b.name);
