@@ -25,6 +25,12 @@ const categories = computed(() => store.getters['database/categories'] );
 const srcElement = ref(null);
 
 const handleDragStart = (event) => {
+  event.dataTransfer.setData(
+      'text/plain', JSON.stringify({
+        type: 'category',
+        data: store.getters['database/getCategoryById'](event.target.dataset.categoryId),
+      }),
+  )
   srcElement.value = event.target;
 }
 

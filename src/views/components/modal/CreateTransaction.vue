@@ -8,8 +8,16 @@
               v-model="transaction.amount"
               label="Amount"
               type="number"
+              autofocus
               required
           ></v-text-field>
+
+
+          <v-textarea
+              v-model="transaction.note"
+              label="Note"
+              rows="2"
+          ></v-textarea>
 
           <v-select
               v-model="transaction.category"
@@ -49,12 +57,6 @@
                 @input="menu = false"
             ></v-date-picker>
           </v-menu>
-
-          <v-textarea
-              v-model="transaction.note"
-              label="Note"
-              rows="2"
-          ></v-textarea>
         </v-form>
       </v-card-text>
       <v-card-actions>
@@ -104,6 +106,14 @@ const createTransaction = () => {
 onMounted(() => {
   eventBus.on('plusBtnClicked', () => {
     dialog.value = true;
+  });
+
+
+  eventBus.on('create-transaction', ({category, account}) => {
+    dialog.value = true;
+
+    transaction.value.account = account.id;
+    transaction.value.category = category.id;
   });
 })
 
