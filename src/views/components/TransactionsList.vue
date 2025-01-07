@@ -60,12 +60,12 @@ const groupedTransactions = computed(() => {
           grouped[dateKey] = {transactions: [], total: 0};
         }
         grouped[dateKey].transactions.push(transaction);
-        grouped[dateKey].total += transaction.amount < 0 ? transaction.amount : 0; // Sum only expenses
+        grouped[dateKey].total += transaction.amount < 0 && transaction.category ? transaction.amount : 0; // Sum only expenses
       });
 
   return Object.entries(grouped).map(([date, {transactions, total}]) => ({
     date,
-    transactions,
+    transactions: transactions.sort(( t1, t2) => {return t1.date.toDate() > t2.date.toDate() ?  -1 : 1}),
     total
   }));
 });
