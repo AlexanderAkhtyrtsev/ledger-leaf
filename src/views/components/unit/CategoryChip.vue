@@ -3,7 +3,7 @@
     <v-col @click="toggle" class="ma-0 pa-1">
     <v-chip
         class="ma-0"
-        :size="category.children.length && !category.parentId ? 'default' : 'small'"
+        :size="category.children.length && !category.parentId ? ($vuetify.display.mdAndUp ? 'x-large' : 'default') : ($vuetify.display.mdAndUp ? 'default' : 'small')"
         :color="category.children.length && !category.parentId ? 'primary' : category.parentId ? 'success' : 'secondary'"
         label
         draggable

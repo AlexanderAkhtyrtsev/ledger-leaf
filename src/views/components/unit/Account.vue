@@ -1,20 +1,18 @@
 <template>
-  <v-card>
-    <v-card-title>{{ account.name }}</v-card-title>
-    <v-card-subtitle>{{ formatCurrency(account.amount, account.currency) }}</v-card-subtitle>
-    <v-card-text>
-      <v-row>
-        <v-col v-if="account.note">Note: {{ account.note }}</v-col>
-      </v-row>
-    </v-card-text>
-    <v-card-actions>
-      <v-spacer></v-spacer>
-      <v-btn
-          color="medium-emphasis"
-          icon="mdi-plus"
-          size="small"
-      ></v-btn>
-    </v-card-actions>
+  <v-card
+      class="mx-auto"
+      target="_blank"
+      :title="account.name"
+      :subtitle="formatCurrency(account.amount, account.currency) + ( account.note ? ' - ' + account.note : '' )"
+  >
+   <template v-slot:prepend>
+     <v-icon size="x-large">{{ account.icon || 'mdi-wallet' }}</v-icon>
+   </template>
+    <template v-slot:append>
+      <v-btn flat>
+        <v-icon>mdi-plus</v-icon>
+      </v-btn>
+    </template>
   </v-card>
 </template>
 

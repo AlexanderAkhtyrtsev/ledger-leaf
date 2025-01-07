@@ -4,8 +4,8 @@
        @dragover.prevent
        @drop="dropped = true"
   >
-    <v-row class="py-10">
-      <v-col v-for="account in accounts" :key="account.id">
+    <v-row>
+      <v-col cols="12" md="4" v-for="account in accounts" :key="account.id">
         <Account :account="account"
                  draggable="true"
                  @drop.stop="handleDrop($event, account)"
