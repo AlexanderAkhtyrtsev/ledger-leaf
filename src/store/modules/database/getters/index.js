@@ -24,7 +24,13 @@ export default {
 
 
     categories: (state) => {
-        const sorted = state.categories.sort((a, b) => {
+        const sorted = state.categories
+            // Normalize data
+            .map(c => {
+                c.parentId = c.parentId || null;
+                return c;
+            })
+            .sort((a, b) => {
             // Categories without parentId come first
             if (!a.parentId && b.parentId) return -1;
             if (a.parentId && !b.parentId) return 1;
