@@ -1,41 +1,39 @@
 <template>
-    <CategoryChip
-        v-for="category in categories"
-        :category="category"
-        @dragstart="handleDragStart"
-        @drop="handleDrop"
-        @dragover.prevent
-    ></CategoryChip>
+  <div>
+    <Search v-model="filter" />
+
+    <div @drop="handleDrop" @dragover.prevent>
+      <CategoryChip
+          v-for="category in sortedCategories"
+          :category="category"
+          @drag-start="handleDragStart"
+          @drag-drop="handleDrop"
+          :filter="filter"
+      ></CategoryChip>
+    </div>
+  </div>
 </template>
 
 <script setup>
 import store from '@/store';
 import {computed, ref} from 'vue';
 import CategoryChip from '@/views/components/unit/CategoryChip.vue';
+import Search from '@/views/components/unit/Search.vue';
 
 const categories = computed(() => store.getters['database/categories'] );
 
 const srcElement = ref(null);
 
-let clone;
-
 const handleDragStart = (event) => {
   srcElement.value = event.target;
-  clone = event.target.cloneNode(true);
-  clone.style.position = 'absolute';
-  clone.style.top = '-9999px'; // Hide it off-screen
-  document.body.appendChild(clone);
-
-  console.log(event.target)
-  event.dataTransfer.setDragImage(event.target.querySelector('.v-chip__underlay'), 0, 0);
 }
 
 const handleDrop = (event) => {
-  clone && document.body.removeChild(clone);
   const target = event.target.closest('[data-category-id]');
-  if ( !target || !srcElement.value ) return;
 
-  const {categoryId: parentId} = target.dataset;
+  if ( !srcElement.value ) return;
+
+  const parentId = target?.dataset?.categoryId || null;
   const id = srcElement.value.dataset.categoryId;
 
   srcElement.value = null;
@@ -48,4 +46,39 @@ const handleDrop = (event) => {
   } )
 }
 
+
+const filter = ref('');
+
+const sortedCategories = computed(() => {
+  const v = filter.value.toLowerCase();
+
+  const doesCategoryOrChildrenMatch = (category, filterValue) => {
+    // Check if the category name matches or if any child matches recursively
+    if (category.name.toLowerCase().includes(filterValue)) return true;
+    return (category.children || []).some(child => doesCategoryOrChildrenMatch(child, filterValue));
+  };
+
+  const compare = (a, b) => {
+    const aMatches = doesCategoryOrChildrenMatch(a, v);
+    const bMatches = doesCategoryOrChildrenMatch(b, v);
+
+    // Prioritize parents with matching children or themselves
+    if (aMatches && !bMatches) return -1;
+    if (!aMatches && bMatches) return 1;
+
+    // Sort alphabetically if both or neither match
+    return a.name.localeCompare(b.name);
+  };
+
+  const sortRecursively = (categories) => {
+    return categories
+        .map((category) => ({
+          ...category,
+          children: sortRecursively(category.children || []),
+        }))
+        .sort(compare);
+  };
+
+  return sortRecursively(categories.value);
+});
 </script>
