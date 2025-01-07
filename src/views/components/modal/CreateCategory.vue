@@ -13,36 +13,23 @@
               required
           />
 
-          <v-chip-group
-              class="mb-5"
-              column
-              active-class="bg-primary text-white"
-          >
-            <v-chip
-                v-for="i in icons"
-                :key="i"
-                @click="icon = i"
-                outlined
-            ><v-icon class="mr-2">{{ i }}</v-icon>
-            </v-chip>
-          </v-chip-group>
+          <v-container class="my-2">
+            <v-row style="height: 200px;overflow-y: scroll;">
+              <v-col v-for="item in icons" class="ma-1 pa-0">
+                <v-btn :color="icon === item ? 'success' : ''" @click="icon = item">
+                  <v-icon size="x-large">{{ item }}</v-icon>
+                </v-btn>
+              </v-col>
+            </v-row>
+          </v-container>
 
           <v-select
               v-model="type"
+              class="my-2"
               :items="categoryTypes"
               label="Category Type"
               :rules="[requiredRule]"
               required
-          />
-
-          <!-- Parent Category Selection -->
-          <v-select
-              v-model="parentCategory"
-              :items="categories"
-              item-value="id"
-              item-title="name"
-              label="Select Parent Category (optional)"
-              :rules="[optionalRule]"
           />
         </v-form>
       </v-card-text>
