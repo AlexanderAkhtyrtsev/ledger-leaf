@@ -1,7 +1,7 @@
 <template>
   <div v-if="accounts.length"
-       :class="{ 'bg-grey-darken-3': !!srcAccount }"
        @dragover.prevent
+       @dragend="dropped = true"
        @drop="dropped = true"
   >
     <v-row>
@@ -59,6 +59,7 @@ const handleDrop = (event, account) => {
       srcAccount.value = null;
       return;
     }
+
     targetAccount.value = account;
   }
 
