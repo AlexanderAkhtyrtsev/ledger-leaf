@@ -46,6 +46,11 @@ const handleDrop = (event) => {
 
   if ( !id || id === parentId) return;
 
+  const srcCategory = store.getters['database/getCategoryById'](id);
+  const parentCategory = store.getters['database/getCategoryById'](parentId);
+
+  if ( parentCategory?.parentId === srcCategory.id ) return;
+
   store.dispatch('database/updateCategory', {
     id,
     parentId
