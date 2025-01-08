@@ -2,13 +2,14 @@
   <div>
     <Search v-model="filter" />
 
-    <v-row @drop="handleDrop" @dragover.prevent class="pb-10">
+    <v-row @drop="handleDrop" @dragover.prevent class="pb-10" >
       <CategoryChip
-          v-for="category in sortedCategories"
+          v-for="(category, idx) in sortedCategories"
           :category="category"
           @drag-start="handleDragStart"
           @drag-drop="handleDrop"
           :filter="filter"
+          :idx="idx"
       ></CategoryChip>
     </v-row>
   </div>

@@ -1,55 +1,51 @@
 <template>
-  <span v-show="!category.parentId || matchesFilter">
-    <v-col @click="toggle" class="ma-0 pa-1">
-    <v-chip
-        class="ma-0"
-        :size="category.children.length && !category.parentId ? ($vuetify.display.mdAndUp ? 'x-large' : 'default') : ($vuetify.display.mdAndUp ? 'default' : 'small')"
-        :color="category.children.length && !category.parentId ? 'primary' : category.parentId ? 'success' : 'secondary'"
-        label
-        draggable
-        :data-category-id="category.id"
-        @dragstart="emit('drag-start', $event)"
-        @drop="emit('drag-drop', $event)"
-        @dragover.prevent
-    >
-      <v-icon start>{{ category.icon }}</v-icon>
-      {{ category.name }}
-
+  <v-col cols="6" md="1" class=" d-flex align-content-stretch">
+  <v-sheet
+      class="ma-0 pa-2 rounded-lg flex-1-0-0 d-flex flex-column flex-wrap justify-space-around"
+      label
+      draggable="true"
+      :data-category-id="category.id"
+      @dragstart="emit('drag-start', $event)"
+      @drop="emit('drag-drop', $event)"
+      @dragover.prevent
+      :color="matchesFilter ? 'grey-darken-3' : ''"
+  >
+    <div class="text-center pa-2">
       <v-badge
           v-if="category.children.length"
           color="secondary"
-          inline
           :content="category.children.length"
-      > </v-badge>
-    </v-chip>
+      >
+        <v-icon :size="36">{{ category.icon }}</v-icon>
+      </v-badge>
+      <v-icon v-else size="36">{{ category.icon }}</v-icon>
+    </div>
+    <div class="text-center" :style="{'min-height': '2em', 'font-size': $vuetify.display.mdAndUp ? '1rem' : '0.8rem'}">
+      {{ category.name }}
+    </div>
+  </v-sheet>
+  </v-col>
 
-    </v-col>
-
-    <CategoryChip v-if="category.children.length"
-                  v-for="child in category.children"
-                  :category="child"
-                  v-show="showChildren"
-                  :filter="filter"
-                  @drag-start="emit('drag-start', $event)"
-                  @drag-drop="emit('drag-drop', $event)">
+  <template v-if="category.children.length"
+            v-for="child in category.children">
+    <CategoryChip
+        :category="child"
+        :filter="filter"
+        :idx="idx"
+        @drag-start="emit('drag-start', $event)"
+        @drag-drop="emit('drag-drop', $event)">
     </CategoryChip>
-  </span>
+  </template>
 </template>
 
 <script setup>
-import {ref, computed} from 'vue';
+import {computed} from 'vue';
 
-const {category, filter} = defineProps(['category', 'filter'])
+const {category, filter, idx} = defineProps(['category', 'filter', 'idx'])
 const emit = defineEmits(['drag-start', 'drag-drop'])
-
 
 const matchesFilter = computed(() => {
   return filter && category.name.toLowerCase().includes(filter.toLowerCase())
 })
 
-const showChildren = ref(false)
-
-const toggle = () => {
-  showChildren.value = !showChildren.value
-}
 </script>
