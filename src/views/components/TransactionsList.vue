@@ -1,5 +1,7 @@
 <template>
-    <v-infinite-scroll :items="groupedTransactions" :onLoad="loadMore">
+  <div>
+    <Search v-model="search" />
+    <v-infinite-scroll :items="groupedTransactions" :onLoad="loadMore" mode="manual">
         <v-list lines="two"
                 v-for="(group, index) in groupedTransactions" :key="index"
         >
@@ -37,6 +39,7 @@
           </v-list-item>
         </v-list>
     </v-infinite-scroll>
+  </div>
 </template>
 
 <script setup>
@@ -44,8 +47,11 @@ import {DateTime} from 'luxon';
 import {computed, ref} from 'vue';
 import {formatCurrency} from '@/helpers';
 import store from '@/store'
+import Search from '@/views/components/unit/Search.vue';
 
 const updateKey = ref(0);
+
+const search = ref('');
 
 const groupedTransactions = computed(() => {
   const grouped = {};
@@ -54,6 +60,13 @@ const groupedTransactions = computed(() => {
 
   store.getters['database/transactions']
       .sort((a, b) => b.date - a.date) // Sort transactions by date (latest first)
+      .filter( (t) => {
+        const s = String(search.value).toLowerCase();
+        if (!s) return true;
+
+        return String(t.note || '').toLowerCase().includes(s)
+            || String(t.category?.name || 'transfer').toLowerCase().includes(s)
+      })
       .forEach(transaction => {
         const dateKey = DateTime.fromJSDate(transaction.date.toDate()).toISODate(); // Group by date
         if (!grouped[dateKey]) {
