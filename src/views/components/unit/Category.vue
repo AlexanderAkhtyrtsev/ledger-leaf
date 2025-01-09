@@ -30,14 +30,14 @@
 
   <template v-if="category.children.length && expand"
             v-for="child in category.children">
-    <CategoryChip
+    <Category
         :category="child"
         :filter="filter"
         @drag-start="emit('drag-start', $event)"
         @drag-drop="emit('drag-drop', $event)"
         :expand="expand"
         :level="(level || 0) + 1"
-    ></CategoryChip>
+    ></Category>
   </template>
 </template>
 

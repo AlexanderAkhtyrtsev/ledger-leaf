@@ -3,7 +3,7 @@
     <Search v-model="filter" />
 
     <v-row @drop="handleDrop" @dragover.prevent class="pb-10" >
-      <CategoryChip
+      <Category
           v-for="(category, idx) in sortedCategories"
           :category="category"
           @drag-start="handleDragStart"
@@ -11,7 +11,7 @@
           :filter="filter"
           :expand="expanded === category.id ? category.id : null"
           @expand="() => {expanded = expanded === category.id ? null : category.id}"
-      ></CategoryChip>
+      ></Category>
     </v-row>
   </div>
 </template>
@@ -19,7 +19,7 @@
 <script setup>
 import store from '@/store';
 import {computed, ref} from 'vue';
-import CategoryChip from '@/views/components/unit/CategoryChip.vue';
+import Category from '@/views/components/unit/Category.vue';
 import Search from '@/views/components/unit/Search.vue';
 
 const categories = computed(() => store.getters['database/categories'] );
