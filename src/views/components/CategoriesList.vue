@@ -9,7 +9,8 @@
           @drag-start="handleDragStart"
           @drag-drop="handleDrop"
           :filter="filter"
-          :idx="idx"
+          :expand="expanded === category.id ? category.id : null"
+          @expand="() => {expanded = expanded === category.id ? null : category.id}"
       ></CategoryChip>
     </v-row>
   </div>
@@ -24,6 +25,8 @@ import Search from '@/views/components/unit/Search.vue';
 const categories = computed(() => store.getters['database/categories'] );
 
 const srcElement = ref(null);
+
+const expanded = ref(null);
 
 const handleDragStart = (event) => {
   event.dataTransfer.setData(

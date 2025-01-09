@@ -1,6 +1,8 @@
 <template>
-  <v-col cols="4" md="1" class=" d-flex align-content-stretch">
+  <v-col cols="4" md="2" lg="1"
+         :class="{ 'd-flex align-content-stretch': true }">
   <v-sheet
+      @click="category.children.length ? emit('expand', !expand) : ''"
       class="ma-0 pa-2 rounded-lg flex-1-0-0 d-flex flex-column flex-wrap justify-space-around"
       label
       draggable="true"
@@ -8,7 +10,7 @@
       @dragstart="emit('drag-start', $event)"
       @drop="emit('drag-drop', $event)"
       @dragover.prevent
-      :color="matchesFilter ? 'grey-darken-3' : ''"
+      :color="color"
   >
     <div class="text-center pa-2">
       <v-badge
@@ -26,23 +28,42 @@
   </v-sheet>
   </v-col>
 
-  <template v-if="category.children.length"
+  <template v-if="category.children.length && expand"
             v-for="child in category.children">
     <CategoryChip
         :category="child"
         :filter="filter"
-        :idx="idx"
         @drag-start="emit('drag-start', $event)"
-        @drag-drop="emit('drag-drop', $event)">
-    </CategoryChip>
+        @drag-drop="emit('drag-drop', $event)"
+        :expand="expand"
+        :level="(level || 0) + 1"
+    ></CategoryChip>
   </template>
 </template>
 
 <script setup>
 import {computed} from 'vue';
 
-const {category, filter, idx} = defineProps(['category', 'filter', 'idx'])
-const emit = defineEmits(['drag-start', 'drag-drop'])
+const {category, filter, expand, level } = defineProps(['category', 'filter', 'expand', 'level'])
+
+const emit = defineEmits(['drag-start', 'drag-drop', 'expand'])
+
+const color = computed(() => {
+  if ( matchesFilter.value ) {
+    return 'green-darken-4';
+  }
+
+  if ( level === 1 ) {
+    return 'grey-darken-3'
+  }
+  if ( level === 2 ) {
+    return 'grey-darken-2'
+  }
+  if ( level >= 3 ) {
+    return 'grey-darken-1'
+  }
+
+});
 
 const matchesFilter = computed(() => {
   return filter && category.name.toLowerCase().includes(filter.toLowerCase())
