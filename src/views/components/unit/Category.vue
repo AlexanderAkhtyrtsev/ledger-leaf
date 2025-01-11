@@ -22,7 +22,7 @@
       </v-badge>
       <v-icon v-else size="30">{{ category.icon }}</v-icon>
     </div>
-    <div class="text-center" :style="{'min-height': '2em', 'font-size': $vuetify.display.mdAndUp ? '1rem' : '0.8rem'}">
+    <div class="text-center" :style="{'min-height': '2em', 'font-size': $vuetify.display.mdAndUp ? '0.9rem' : '0.8rem'}">
       {{ category.name }}
     </div>
   </v-sheet>

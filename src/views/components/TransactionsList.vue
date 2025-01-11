@@ -7,16 +7,18 @@
         >
           <v-list-item>
             <template v-slot:prepend>
-              <v-list-subheader inset sticky>
+              <v-list-item-title >
                 {{ DateTime.fromJSDate(new Date(group.date)).toFormat('MMMM dd, yyyy') }}
-              </v-list-subheader>
+              </v-list-item-title>
             </template>
             <template v-slot:append>
-              <div style="color: red;"> {{ group.total.toFixed(2) }}</div>
+              <template  v-for="[currency, figure] in Object.entries(group.total)" >
+                <div style="color: red;font-weight: bolder;" class="ml-2" v-if="figure"> {{ formatCurrency(figure, currency) }}</div>
+              </template>
             </template>
           </v-list-item>
 
-          <v-divider inset></v-divider>
+          <v-divider></v-divider>
 
           <v-list-item
               v-for="transaction in group.transactions"
@@ -70,10 +72,10 @@ const groupedTransactions = computed(() => {
       .forEach(transaction => {
         const dateKey = DateTime.fromJSDate(transaction.date.toDate()).toISODate(); // Group by date
         if (!grouped[dateKey]) {
-          grouped[dateKey] = {transactions: [], total: 0};
+          grouped[dateKey] = {transactions: [], total: {}};
         }
         grouped[dateKey].transactions.push(transaction);
-        grouped[dateKey].total += transaction.amount < 0 && transaction.category ? transaction.amount : 0; // Sum only expenses
+        grouped[dateKey].total[transaction.account.currency] = (grouped[dateKey].total[transaction.account.currency] || 0) + (transaction.amount < 0 && transaction.category ? transaction.amount : 0); // Sum only expenses
       });
 
   return Object.entries(grouped).map(([date, {transactions, total}]) => ({
