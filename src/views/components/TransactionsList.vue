@@ -25,6 +25,7 @@
               :key="transaction.id"
               :subtitle="displayDescription(transaction)"
               :title="displayDescription(transaction,true)"
+              @click="eventBus.emit('update-transaction', transaction)"
           >
             <template v-slot:prepend>
               <v-avatar>
@@ -49,6 +50,7 @@ import {DateTime} from 'luxon';
 import {computed, ref} from 'vue';
 import {formatCurrency} from '@/helpers';
 import store from '@/store'
+import eventBus from '@/eventBus';
 import Search from '@/views/components/unit/Search.vue';
 
 const updateKey = ref(0);

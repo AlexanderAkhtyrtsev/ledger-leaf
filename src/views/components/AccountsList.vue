@@ -65,8 +65,8 @@ const handleDrop = (event, account) => {
 
   else if ( type === 'category' ) {
     eventBus.emit('create-transaction', {
-      category: data,
-      account,
+      categoryId: data.id,
+      accountId: account.id,
     })
   }
 }

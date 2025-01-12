@@ -1,6 +1,7 @@
 import {auth} from '@/firebase/auth';
 import {createTransaction, getTransactions} from '@/firebase/db';
 import {Timestamp} from 'firebase/firestore'
+import Transaction from '@/firebase/models/Transaction';
 
 export default {
     async fetchTransactions({state}) {
@@ -25,6 +26,23 @@ export default {
             return r;
         }).catch(error => {
             console.error('Error creating transaction:', error);
+        });
+    },
+    async updateTransaction({state, commit}, transactionData) {
+        const user = auth.currentUser;
+        if (!user) {
+            console.error('No user is logged in');
+            return;
+        }
+
+        const instance = new Transaction(transactionData);
+
+        return instance.save().then(r => {
+            commit('updateTransaction', instance.normalizedData())
+            return r;
+        }).catch(error => {
+            console.error('Error updating transaction:', error);
+            commit('addError', 'Error updating transaction:' + error?.message, {root: true})
         });
     },
     async createTransfer({state, commit, dispatch}, { source, target }) {

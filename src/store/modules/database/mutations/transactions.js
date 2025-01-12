@@ -9,7 +9,22 @@ export default {
                   : Timestamp.fromDate( new Date(transactionData.date ?? Date.now()) ),
         }]
 
-        console.log(transactionData)
+        state.expenses[transactionData.accountId] += transactionData.amount;
+    },
+    updateTransaction(state, transactionData) {
+        state.transactions = [
+            ...state.transactions.filter( t => {
+                if ( t.id === transactionData['id'] ) {
+                    state.expenses[transactionData.accountId] -= t.amount;
+                    return false;
+                }
+
+                return true;
+            } ),
+
+            transactionData
+        ];
+
         state.expenses[transactionData.accountId] += transactionData.amount;
     }
 }
