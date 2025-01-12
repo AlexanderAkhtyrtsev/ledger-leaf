@@ -1,8 +1,5 @@
 <template>
-  <v-container>
-    <AccountsList />
-  </v-container>
-
+  <AccountsList />
   <CreateAccount />
 </template>
 

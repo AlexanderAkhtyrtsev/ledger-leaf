@@ -1,7 +1,6 @@
 <template>
   <v-container>
     <CategoriesList />
-
     <CreateCategory />
   </v-container>
 </template>

@@ -1,6 +1,6 @@
 <template>
   <v-col cols="4" md="2" lg="1"
-         :class="{ 'd-flex align-content-stretch': true }">
+         :class="{ 'd-flex align-content-stretch pa-2': true }">
   <v-sheet
       @click="category.children.length ? emit('expand', !expand) : ''"
       class="ma-0 pa-2 rounded-lg flex-1-0-0 d-flex flex-column flex-wrap justify-space-around"
