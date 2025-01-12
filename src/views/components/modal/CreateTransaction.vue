@@ -151,9 +151,9 @@ onMounted(() => {
     transaction.value['type'] = transactionData['amount'] > 0 ? 'income' : 'expense'
 
     // Convert to JS date
-    transaction.value['date'] = transaction.value['date']['toDate']
+    transaction.value['date'] = transaction.value['date']?.['toDate']
                                 ? transaction.value['date']['toDate']()
-                                : transaction.value['date']['toDate'];
+                                : transaction.value['date'];
 
     transaction.value['amount'] = Math.abs(transaction.value['amount']);
   };
