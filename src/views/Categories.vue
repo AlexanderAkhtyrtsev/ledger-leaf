@@ -1,8 +1,6 @@
 <template>
-  <v-container>
-    <CategoriesList />
-    <CreateCategory />
-  </v-container>
+  <CategoriesList />
+  <CreateCategory />
 </template>
 
 <script setup>
