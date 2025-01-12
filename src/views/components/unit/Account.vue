@@ -1,5 +1,6 @@
 <template>
   <v-card
+      density="compact"
       class="mx-auto"
       target="_blank"
       :title="account.name"
@@ -8,11 +9,6 @@
    <template v-slot:prepend>
      <v-icon size="x-large">{{ account.icon || 'mdi-wallet' }}</v-icon>
    </template>
-    <template v-slot:append>
-      <v-btn flat>
-        <v-icon>mdi-plus</v-icon>
-      </v-btn>
-    </template>
   </v-card>
 </template>
 

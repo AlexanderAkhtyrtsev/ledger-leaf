@@ -1,6 +1,6 @@
 <template>
   <Welcome v-if="!auth.currentUser" />
-  <v-container v-else>
+  <div v-else>
     <v-row>
       <v-col cols="12">
         <AccountsList />
@@ -12,7 +12,7 @@
         <CreateTransaction />
       </v-col>
     </v-row>
-  </v-container>
+  </div>
 </template>
 
 <script setup>

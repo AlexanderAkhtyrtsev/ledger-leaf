@@ -5,7 +5,10 @@
        @drop="dropped = true"
   >
     <v-row>
-      <v-col xs="6" sm="6" md="4" v-for="account in accounts" :key="account.id">
+      <v-col cols="6" sm="6" md="4"
+             class="pa-1"
+             v-for="account in accounts"
+             :key="account.id">
         <Account :account="account"
                  draggable="true"
                  @drop.stop="handleDrop($event, account)"
