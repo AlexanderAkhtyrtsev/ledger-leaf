@@ -14,7 +14,7 @@ export default class Transaction extends FirestoreModel {
         });
     }
 
-    get collectionName() {
+    static get collectionName() {
         return`users/${auth.currentUser.uid}/transactions`;
     }
 
