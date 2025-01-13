@@ -2,7 +2,8 @@ import {auth} from '@/firebase/auth';
 import {addDoc, collection, doc, writeBatch} from 'firebase/firestore';
 import {db, db as firestore} from '@/firebase/index';
 import {findIconByKeyword} from '@/helpers/categories-icons';
-import {getAccounts, getCategories} from '@/firebase/db';
+import {getCategories} from '@/firebase/db';
+import Account from '@/firebase/models/Account'
 
 
 export const uploadToFirestore = async (transactions) => {
@@ -20,7 +21,7 @@ export const uploadToFirestore = async (transactions) => {
 
 
     const [ accounts, categories ] = await Promise.all([
-        getAccounts(),
+        Account.all(),
         getCategories()
     ])
 

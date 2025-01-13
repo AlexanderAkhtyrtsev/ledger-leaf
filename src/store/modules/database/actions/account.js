@@ -1,11 +1,13 @@
-import {createAccount, getAccounts} from '@/firebase/db';
+import Account from '@/firebase/models/Account';
 
 export default {
     async fetchAccounts({state}) {
-        state.accounts = await getAccounts()
+        state.accounts = await Account.all()
     },
     async createAccount({state, dispatch}, accountData) {
-        return createAccount(accountData)
+        const account = new Account(accountData);
+
+        return account.save()
             .then((r) => {
                 dispatch('fetchAccounts')
                 return r;

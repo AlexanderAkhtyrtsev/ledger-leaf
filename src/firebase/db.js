@@ -2,36 +2,6 @@ import {auth} from '@/firebase/auth';
 import {addDoc, collection, getDocs, doc, orderBy, query, startAfter, limit, updateDoc} from 'firebase/firestore';
 import {db, db as firestore} from '@/firebase/index';
 
-
-export async function getAccounts() {
-    const user = auth.currentUser;
-    if (!user) {
-        console.error('No user is logged in');
-        return [];
-    }
-
-    // Get the accounts for the current user
-    const q = query(collection(firestore, 'users', user.uid, 'accounts'));
-    const querySnapshot = await getDocs(q);
-
-    return querySnapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data(),
-    }));
-}
-
-
-export async function createAccount(accountData) {
-
-    const user = auth.currentUser;
-    if (!user) {
-        console.error('No user is logged in');
-        return;
-    }
-
-    return addDoc(collection(db, 'users', user.uid, 'accounts'), accountData)
-}
-
 export async function getCategories() {
     try {
         const user = auth.currentUser;
