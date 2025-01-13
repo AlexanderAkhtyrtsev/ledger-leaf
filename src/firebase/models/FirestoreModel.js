@@ -5,9 +5,10 @@ import {auth} from '@/firebase/auth';
 export default class FirestoreModel {
     constructor(attributes = {}) {
         Object.assign(this, attributes);
+        this.collectionName = this.constructor.collectionName;
     }
 
-    get collectionName() {
+    static get collectionName() {
         return '';
     }
 
@@ -38,7 +39,9 @@ export default class FirestoreModel {
 
     // Save (create or update) the document
     async save() {
-        const ref = doc(collection(db, this.collectionName), this.id || undefined); // Use `id` if available, else create new
+        const args = [ collection(db, this.collectionName), this.id ].filter( a => a );
+
+        const ref = doc(...args); // Use `id` if available, else create new
 
         const {id, ...data} = this.normalizedData(); // Don't save the `id` in the document
 
