@@ -25,7 +25,7 @@ export default class Account extends FirestoreModel {
             ...this,
             amount: +this.amount,
             icon: this.icon || 'mdi-wallet',
-            createdAt: this.date instanceof Timestamp ? this.date : Timestamp.fromDate( new Date( this.date ) )
+            createdAt: this.date instanceof Timestamp ? this.createdAt : Timestamp.fromDate( new Date( this.createdAt ) )
         }
     }
 }
