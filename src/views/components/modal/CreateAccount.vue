@@ -1,5 +1,5 @@
 <template>
-  <v-dialog v-model="dialog" max-width="500px">
+  <v-dialog v-model="dialog" :max-width="$vuetify.display.mdAndUp ? '500px' : null" :fullscreen="!$vuetify.display.mdAndUp">
     <v-card>
       <v-card-title class="headline">Create Account</v-card-title>
       <v-card-text>
@@ -24,7 +24,10 @@
               :rules="[amountRule, requiredRule]"
               required
           />
-          <v-textarea
+
+          <icon-picker :hint="name" v-model="icon" :value="icon" />
+
+          <v-text-field
               v-model="note"
               label="Note"
               hint="Optional"
@@ -41,8 +44,10 @@
 
 <script>
 import eventBus from '@/eventBus';
+import IconPicker from '@/views/components/unit/IconPicker.vue';
 
 export default {
+  components: {IconPicker},
   data() {
     return {
       dialog: false,
@@ -50,6 +55,7 @@ export default {
       currency: '',
       amount: 0,
       note: '',
+      icon: 'mdi-wallet',
       formValid: false,
       currencies: ['USD', 'EUR', 'GBP', 'UAH'], // List of currencies
       requiredRule: value => String(value).length || 'This field is required',
@@ -63,6 +69,7 @@ export default {
           name: this.name,
           currency: this.currency,
           amount: +this.amount,
+          icon: this.icon || 'mdi-wallet',
           note: this.note,
           userId: this.$store.state.user.uid, // Link the account to the current user
           createdAt: new Date(),
