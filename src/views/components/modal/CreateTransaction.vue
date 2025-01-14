@@ -76,6 +76,10 @@
             ></v-date-picker>
           </v-menu>
         </v-form>
+
+        <v-card-actions v-if="transaction.id">
+          <DeleteButton label="Delete Transaction" @delete="deleteTransaction" />
+        </v-card-actions>
       </v-card-text>
     </v-card>
   </v-dialog>
@@ -87,6 +91,7 @@ import {useStore} from 'vuex';
 import {computed} from 'vue';
 import eventBus from '@/eventBus';
 import {DateTime} from 'luxon';
+import DeleteButton from '@/views/components/unit/DeleteButton.vue';
 
 const store = useStore()
 const dialog = ref(false);
@@ -135,6 +140,11 @@ const submit = () => {
 
   dialog.value = false;
 };
+
+const deleteTransaction = () => {
+  store.dispatch('database/deleteTransaction', transaction.value.id)
+      .then( (success) => success && (dialog.value = false) )
+}
 
 onMounted(() => {
   eventBus.on('plusBtnClicked', () => {

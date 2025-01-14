@@ -45,6 +45,13 @@ export default {
             commit('addError', 'Error updating transaction:' + error?.message, {root: true})
         });
     },
+    async deleteTransaction({state, commit}, id) {
+        return Transaction.delete(id)
+            .then( () => { commit('deleteTransaction', id); return true; })
+            .catch( error => {
+                commit('addError', 'Error updating transaction:' + error?.message, {root: true})
+            })
+    },
     async createTransfer({state, commit, dispatch}, { source, target }) {
         dispatch('createTransaction', {
             amount: Math.abs(source.amount) * -1,

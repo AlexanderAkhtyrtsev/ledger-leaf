@@ -56,6 +56,12 @@ export default class FirestoreModel {
         await deleteDoc(ref);
     }
 
+    static async delete(id) {
+        if (!id) throw new Error('Cannot delete a document without an ID');
+        const ref = doc(collection(db, this.collectionName), id);
+        await deleteDoc(ref);
+    }
+
     normalizedData() {
         return {...this};
     }

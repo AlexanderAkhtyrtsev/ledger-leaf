@@ -11,6 +11,16 @@ export default {
 
         state.expenses[transactionData.accountId] += transactionData.amount;
     },
+    deleteTransaction(state, id) {
+        state.transactions = state.transactions.filter( t => {
+            if ( t.id === id ) {
+                state.expenses[t.accountId] -= t.amount;
+                return false;
+            }
+
+            return true;
+        } );
+    },
     updateTransaction(state, transactionData) {
         state.transactions = [
             ...state.transactions.filter( t => {
