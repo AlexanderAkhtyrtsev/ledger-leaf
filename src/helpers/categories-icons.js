@@ -84,4 +84,5 @@ export const categoryIcons = {
     "mdi-chart-line": "investments, finances, growth",
     "mdi-book": "books, education, learning",
     "mdi-piggy-bank": "savings, finances, budgeting",
+    "mdi-wallet": "savings, finances, budgeting, wallet",
 };
