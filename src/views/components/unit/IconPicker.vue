@@ -11,11 +11,15 @@
 </template>
 
 <script setup>
-import {computed} from 'vue';
+import {computed, onMounted} from 'vue';
 import {categoryIcons} from '@/helpers/categories-icons';
 
 const props = defineProps({
   hint: {
+    type: String,
+    default: '',
+  },
+  value: {
     type: String,
     default: '',
   }
@@ -23,10 +27,12 @@ const props = defineProps({
 
 const icon = defineModel('');
 
+onMounted(() => { icon.value = props.value})
+
 const icons = computed(() => {
   if (props.hint) {
     return Object.entries(categoryIcons)
-        .sort(([, keywords], [, keywords2]) => {
+        .sort(([icon1, keywords], [icon2, keywords2]) => {
           return keywords.toLowerCase().includes(props.hint.toLowerCase())
                  && !keywords2.toLowerCase().includes(props.hint.toLowerCase())
                  ? -1
@@ -34,7 +40,9 @@ const icons = computed(() => {
         })
         .map(([icon]) => icon)
   }
-  return Object.keys(categoryIcons)
+  return Object.keys(categoryIcons).sort( (icon1, icon2) => {
+    return icon1 === props.value && icon2 !== props.value ? -1 : 1
+  })
 })
 </script>
 
