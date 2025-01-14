@@ -13,15 +13,7 @@
               required
           />
 
-          <v-container class="my-2">
-            <v-row style="height: 200px;overflow-y: scroll;">
-              <v-col v-for="item in icons" class="ma-1 pa-0">
-                <v-btn :color="icon === item ? 'success' : ''" @click="icon = item">
-                  <v-icon size="x-large">{{ item }}</v-icon>
-                </v-btn>
-              </v-col>
-            </v-row>
-          </v-container>
+          <icon-picker v-model="icon" :hint="categoryName" />
 
           <v-select
               v-model="type"
@@ -45,8 +37,10 @@
 <script>
 import eventBus from '@/eventBus';
 import {categoryIcons, findIconByKeyword} from '@/helpers/categories-icons';
+import IconPicker from '@/views/components/unit/IconPicker.vue';
 
 export default {
+  components: {IconPicker},
   data() {
     return {
       dialog: false, // Controls the modal visibility
@@ -57,25 +51,11 @@ export default {
       formValid: false,
       categoryTypes: ['must', 'need', 'want'], // Category types
       requiredRule: value => !!value || 'This field is required',
-      optionalRule: value => true, // Optional field (parent category)
     };
   },
   computed: {
     categories() {
       return this.$store.state.database.categories;
-    },
-    icons() {
-      if (this.categoryName) {
-        return Object.entries(categoryIcons)
-            .sort(([, keywords], [, keywords2]) => {
-              return keywords.toLowerCase().includes(this.categoryName.toLowerCase())
-                     && !keywords2.toLowerCase().includes(this.categoryName.toLowerCase())
-                     ? -1
-                     : 1
-            })
-            .map(([icon]) => icon)
-      }
-      return Object.keys(categoryIcons)
     },
   },
   methods: {
