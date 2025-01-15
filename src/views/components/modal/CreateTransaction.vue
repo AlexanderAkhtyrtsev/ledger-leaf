@@ -118,7 +118,8 @@ const formattedDate = computed(() => {
 })
 
 const isFormValid = computed(() => {
-  return ![transaction.value.amount, transaction.value.categoryId, transaction.value.accountId].includes(null)
+  return ![+transaction.value.amount, transaction.value.categoryId, transaction.value.accountId]
+      .some( prop => !prop )
 });
 
 const categories = computed(() => store.state.database.categories);
