@@ -5,30 +5,30 @@
       <v-card-text>
         <v-form v-model="formValid" @submit.prevent="createAccount">
           <v-text-field
-              v-model="name"
+              v-model="account.name"
               label="Account Name"
               :rules="[requiredRule]"
               required
           />
           <v-select
-              v-model="currency"
+              v-model="account.currency"
               :items="currencies"
               label="Currency"
               :rules="[requiredRule]"
               required
           />
           <v-text-field
-              v-model="amount"
-              label="Amount"
+              v-model="account.amount"
+              label="Initial Amount"
               type="number"
               :rules="[amountRule, requiredRule]"
               required
           />
 
-          <icon-picker :hint="name" v-model="icon" :value="icon" />
+          <icon-picker :hint="account.name" v-model="account.icon" :value="account.icon" />
 
           <v-text-field
-              v-model="note"
+              v-model="account.note"
               label="Note"
               hint="Optional"
           />
@@ -42,60 +42,63 @@
   </v-dialog>
 </template>
 
-<script>
+<script setup>
 import eventBus from '@/eventBus';
 import IconPicker from '@/views/components/unit/IconPicker.vue';
+import {onBeforeUnmount, onMounted, ref} from 'vue';
+import store from '@/store';
 
-export default {
-  components: {IconPicker},
-  data() {
-    return {
-      dialog: false,
-      name: '',
-      currency: '',
-      amount: 0,
-      note: '',
-      icon: 'mdi-wallet',
-      formValid: false,
-      currencies: ['USD', 'EUR', 'GBP', 'UAH'], // List of currencies
-      requiredRule: value => String(value).length || 'This field is required',
-      amountRule: v => !isNaN(v) || 'Amount must be a number',
-    };
-  },
-  methods: {
-    async createAccount() {
-      try {
-        this.$store.dispatch('database/createAccount', {
-          name: this.name,
-          currency: this.currency,
-          amount: +this.amount,
-          icon: this.icon || 'mdi-wallet',
-          note: this.note,
-          userId: this.$store.state.user.uid, // Link the account to the current user
-          createdAt: new Date(),
-        }).then(() => {
-          this.dialog = false;
-          this.resetForm();
-        });
+const dialog = ref(false);
 
-      } catch (error) {
-        console.error('Error creating account:', error);
-      }
-    },
-    resetForm() {
-      this.name = '';
-      this.currency = '';
-      this.amount = 0;
-      this.note = '';
-    },
-  },
-  mounted() {
-    eventBus.on('plusBtnClicked', () => {
-      this.dialog = true;
+const account = ref({
+  name: '',
+  currency: '',
+  amount: 0,
+  note: '',
+  icon: 'mdi-wallet'
+});
+
+const formValid = ref(false);
+const currencies = ref(['USD', 'EUR', 'GBP', 'UAH']);
+
+const requiredRule = value => String(value).length || 'This field is required';
+const amountRule = v => !isNaN(v) || 'Amount must be a number';
+
+const createAccount = async () => {
+  try {
+    await store.dispatch('database/createAccount', {
+      ... account.value,
+      userId: store.state.user.uid,
+      createdAt: new Date(),
     });
-  },
-  beforeUnmount() {
-    eventBus.off('plusBtnClicked');
-  },
-}
+
+    dialog.value = false;
+
+    resetForm();
+  } catch (error) {
+    console.error('Error creating account:', error);
+  }
+};
+
+const resetForm = () => {
+  account.value = {
+    name: '',
+    currency: '',
+    amount: 0,
+    note: '',
+    icon: 'mdi-wallet'
+  };
+};
+
+const handlePlusBtnClick = () => {
+  dialog.value = true;
+};
+
+onMounted(() => {
+  eventBus.on('plusBtnClicked', handlePlusBtnClick);
+});
+
+onBeforeUnmount(() => {
+  eventBus.off('plusBtnClicked');
+});
 </script>

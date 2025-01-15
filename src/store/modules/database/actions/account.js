@@ -4,12 +4,12 @@ export default {
     async fetchAccounts({state}) {
         state.accounts = await Account.all()
     },
-    async createAccount({state, dispatch}, accountData) {
+    async createAccount({state, commit}, accountData) {
         const account = new Account(accountData);
 
         return account.save()
             .then((r) => {
-                dispatch('fetchAccounts')
+                commit('createAccount', account.normalizedData())
                 return r;
             });
     },
