@@ -1,9 +1,9 @@
 <template>
   <v-dialog v-model="dialog" :max-width="$vuetify.display.mdAndUp ? '500px' : null" :fullscreen="!$vuetify.display.mdAndUp">
     <v-card>
-      <v-card-title class="headline">Create Account</v-card-title>
+      <v-card-title class="headline">{{ account.id ? 'Edit Account' : 'Create Account'}}</v-card-title>
       <v-card-text>
-        <v-form v-model="formValid" @submit.prevent="createAccount">
+        <v-form v-model="formValid" @submit.prevent="submit">
           <v-text-field
               v-model="account.name"
               label="Account Name"
@@ -34,7 +34,7 @@
           />
 
           <v-btn :disabled="!formValid" color="primary" type="submit">
-            Create Account
+            {{ account.id ? 'Save' : 'Create Account' }}
           </v-btn>
         </v-form>
       </v-card-text>
@@ -50,13 +50,15 @@ import store from '@/store';
 
 const dialog = ref(false);
 
-const account = ref({
+const accountDefaultValue = {
   name: '',
   currency: '',
   amount: 0,
   note: '',
   icon: 'mdi-wallet'
-});
+};
+
+const account = ref( {... accountDefaultValue} );
 
 const formValid = ref(false);
 const currencies = ref(['USD', 'EUR', 'GBP', 'UAH']);
@@ -64,29 +66,27 @@ const currencies = ref(['USD', 'EUR', 'GBP', 'UAH']);
 const requiredRule = value => String(value).length || 'This field is required';
 const amountRule = v => !isNaN(v) || 'Amount must be a number';
 
-const createAccount = async () => {
+const submit = async () => {
   try {
-    await store.dispatch('database/createAccount', {
-      ... account.value,
-      userId: store.state.user.uid,
-      createdAt: new Date(),
-    });
+    await store.dispatch(
+        account.value.id ? 'database/updateAccount' : 'database/createAccount',
+        {
+          ... account.value,
+          userId: store.state.user.uid,
+        });
 
     dialog.value = false;
-
     resetForm();
   } catch (error) {
     console.error('Error creating account:', error);
+    store.commit('addError', error?.message || 'Unknown error');
   }
 };
 
 const resetForm = () => {
   account.value = {
-    name: '',
-    currency: '',
-    amount: 0,
-    note: '',
-    icon: 'mdi-wallet'
+    ... account.value,
+    ... accountDefaultValue,
   };
 };
 
@@ -95,6 +95,17 @@ const handlePlusBtnClick = () => {
 };
 
 onMounted(() => {
+  const pullData = (accountData) => {
+    console.log(accountData)
+    dialog.value = true;
+
+    for(const p in accountData) {
+      account.value[p] = accountData[p];
+    }
+  };
+
+  eventBus.on('create-account', pullData);
+  eventBus.on('update-account', pullData);
   eventBus.on('plusBtnClicked', handlePlusBtnClick);
 });
 

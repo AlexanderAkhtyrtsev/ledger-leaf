@@ -148,10 +148,6 @@ const deleteTransaction = () => {
 }
 
 onMounted(() => {
-  eventBus.on('plusBtnClicked', () => {
-    dialog.value = true;
-  });
-
   const pullData = ( transactionData ) => {
     dialog.value = true;
 
@@ -168,6 +164,8 @@ onMounted(() => {
 
     transaction.value['amount'] = Math.abs(transaction.value['amount']);
   };
+
+  eventBus.on('plusBtnClicked', () => dialog.value = true );
 
   eventBus.on('create-transaction', pullData);
   eventBus.on('update-transaction', pullData);

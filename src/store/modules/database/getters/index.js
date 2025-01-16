@@ -5,7 +5,7 @@ export default {
         return [...state.accounts].map(account => {
             return{
                 ...account,
-                amount: account.amount + (state.expenses[account.id] || 0),
+                remaining: account.amount + (state.expenses[account.id] || 0),
             }
         });
     },

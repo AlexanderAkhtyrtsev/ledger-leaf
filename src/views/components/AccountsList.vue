@@ -13,6 +13,7 @@
                  draggable="true"
                  @drop.stop="handleDrop($event, account)"
                  @dragover.prevent
+                 @click="eventBus.emit('update-account', account)"
                  @dragstart="handleDragStart($event, account)"
         />
       </v-col>

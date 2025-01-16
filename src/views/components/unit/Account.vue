@@ -4,7 +4,7 @@
       class="mx-auto"
       target="_blank"
       :title="account.name"
-      :subtitle="formatCurrency(account.amount, account.currency) + ( account.note ? ' - ' + account.note : '' )"
+      :subtitle="formatCurrency(account.remaining, account.currency) + ( account.note ? ' - ' + account.note : '' )"
   >
    <template v-slot:prepend>
      <v-icon size="x-large">{{ account.icon || 'mdi-wallet' }}</v-icon>

@@ -25,7 +25,7 @@ const props = defineProps({
   }
 });
 
-const icon = defineModel('');
+const icon = defineModel();
 
 onMounted(() => { icon.value = props.value})
 

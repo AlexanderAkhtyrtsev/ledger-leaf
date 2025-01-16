@@ -13,4 +13,13 @@ export default {
                 return r;
             });
     },
+    async updateAccount({state, commit}, accountData) {
+        const account = new Account(accountData);
+
+        return account.save()
+            .then((r) => {
+                commit('updateAccount', account.normalizedData())
+                return r;
+            });
+    },
 }
