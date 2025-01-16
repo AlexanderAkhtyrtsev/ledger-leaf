@@ -33,6 +33,8 @@ const icons = computed(() => {
   if (props.hint) {
     return Object.entries(categoryIcons)
         .sort(([icon1, keywords], [icon2, keywords2]) => {
+          keywords = icon1.split('-').concat(keywords.split(', ')).join(', ');
+          keywords2 = icon2.split('-').concat(keywords2.split(', ')).join(', ');
           return keywords.toLowerCase().includes(props.hint.toLowerCase())
                  && !keywords2.toLowerCase().includes(props.hint.toLowerCase())
                  ? -1
