@@ -3,7 +3,7 @@ import {Timestamp} from 'firebase/firestore';
 import {auth} from '@/firebase/auth';
 
 export default class Account extends FirestoreModel {
-    constructor({ id, name, currency, amount, userId, note, createdAt, icon}) {
+    constructor({ id, name, currency, amount, userId, note, icon}) {
         super({
             id,
             icon,
@@ -12,7 +12,6 @@ export default class Account extends FirestoreModel {
             amount,
             note,
             userId,
-            createdAt,
         });
     }
 
@@ -25,7 +24,6 @@ export default class Account extends FirestoreModel {
             ...this,
             amount: +this.amount,
             icon: this.icon || 'mdi-wallet',
-            createdAt: this.date instanceof Timestamp ? this.createdAt : Timestamp.fromDate( new Date( this.createdAt ) )
         }
     }
 }
