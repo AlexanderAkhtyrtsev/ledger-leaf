@@ -1,5 +1,16 @@
 import {auth} from '@/firebase/auth';
-import {addDoc, collection, getDocs, doc, orderBy, query, startAfter, limit, updateDoc} from 'firebase/firestore';
+import {
+    addDoc,
+    collection,
+    getDocs,
+    doc,
+    orderBy,
+    query,
+    startAfter,
+    limit,
+    updateDoc,
+    where,
+} from 'firebase/firestore';
 import {db, db as firestore} from '@/firebase/index';
 
 export async function getCategories() {
@@ -59,6 +70,24 @@ export async function updateCategory(id, data) {
             id
         ), data
     )
+}
+
+/**
+ * Transactions by a period
+ *
+ * @param {DateTime} startDate
+ * @param {DateTime} endDate
+ * @returns {Promise<array>}
+ */
+export async function getTransactionsByPeriod( startDate, endDate ) {
+    const q = query(
+        collection(firestore, 'users', auth.currentUser.uid, 'transactions'),
+        where("date", ">=", startDate.toJSDate()),
+        where("date", "<=", endDate.toJSDate())
+    );
+
+    const querySnapshot = await getDocs(q);
+    return querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
 }
 
 let lastVisible = null; // Tracks the last document in the current batch

@@ -1,16 +1,16 @@
 import {auth} from '@/firebase/auth';
-import {createTransaction, getTransactions} from '@/firebase/db';
+import {createTransaction, getTransactionsByPeriod} from '@/firebase/db';
 import {Timestamp} from 'firebase/firestore'
 import Transaction from '@/firebase/models/Transaction';
 
 export default {
-    async fetchTransactions({state}) {
+    async fetchTransactions({state, commit}) {
         try {
-            const {transactions, hasMore} = await getTransactions();
-
-            state.transactions = transactions;
+            state.transactions = await getTransactionsByPeriod( state.date.start, state.date.end );
+            commit('shiftPeriod');
         } catch (error) {
             console.error('Error fetching transactions:', error);
+            commit('addError', 'Error updating transaction:' + error?.message, {root: true})
         }
     },
     async createTransaction({state, commit}, transactionData) {
