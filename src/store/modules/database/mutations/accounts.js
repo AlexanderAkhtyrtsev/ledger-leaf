@@ -1,3 +1,5 @@
+import Account from '@/firebase/models/Account';
+
 export default {
     createAccount(state, accountData) {
         state.accounts.push( accountData )
@@ -10,5 +12,10 @@ export default {
 
             return account;
         } );
+    },
+    deleteAccount(state, accountId) {
+        state.accounts = state.accounts.filter( acc => {
+            return acc.id !== accountId;
+        } )
     },
 }

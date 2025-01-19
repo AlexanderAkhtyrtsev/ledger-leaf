@@ -22,4 +22,11 @@ export default {
                 return r;
             });
     },
+    async deleteAccount({state,commit}, id) {
+        const account = await Account.retrieve(id);
+
+        account.delete().then( () => {
+            commit('deleteAccount', id)
+        })
+    }
 }

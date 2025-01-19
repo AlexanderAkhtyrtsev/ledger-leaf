@@ -1,7 +1,12 @@
 <template>
   <v-dialog v-model="dialog" :max-width="$vuetify.display.mdAndUp ? '500px' : null" :fullscreen="!$vuetify.display.mdAndUp">
     <v-card>
-      <v-card-title class="headline">{{ account.id ? 'Edit Account' : 'Create Account'}}</v-card-title>
+      <v-card-title class="d-flex justify-space-between align-center">
+        <span>{{ account.id ? 'Edit Account' : 'Create Account'}}</span>
+        <v-card-actions>
+          <v-btn text color="primary" :disabled="!formValid" @click="submit">Save</v-btn>
+        </v-card-actions>
+      </v-card-title>
       <v-card-text>
         <v-form v-model="formValid" @submit.prevent="submit">
           <v-text-field
@@ -33,9 +38,11 @@
               hint="Optional"
           />
 
-          <v-btn :disabled="!formValid" color="primary" type="submit">
-            {{ account.id ? 'Save' : 'Create Account' }}
-          </v-btn>
+          <v-card-actions v-if="account.id">
+            <DeleteButton label="Archive Account"
+                          confirm-label="Yes, Archive it"
+                          @delete="archiveAccount" />
+          </v-card-actions>
         </v-form>
       </v-card-text>
     </v-card>
@@ -47,6 +54,7 @@ import eventBus from '@/eventBus';
 import IconPicker from '@/views/components/unit/IconPicker.vue';
 import {onBeforeUnmount, onMounted, ref} from 'vue';
 import store from '@/store';
+import DeleteButton from '@/views/components/unit/DeleteButton.vue';
 
 const dialog = ref(false);
 
@@ -81,6 +89,17 @@ const submit = async () => {
     console.error('Error creating account:', error);
     store.commit('addError', error?.message || 'Unknown error');
   }
+};
+
+
+const archiveAccount = () => {
+  store.dispatch('database/deleteAccount', account.value.id)
+      .then(() => {
+        dialog.value = false;
+      })
+      .catch( e => {
+        store.commit('addError', e?.message || 'Unknown error')
+      })
 };
 
 const resetForm = () => {
