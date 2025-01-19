@@ -1,13 +1,13 @@
 <template>
   <span v-if="confirm">Are you sure??</span>
-  <v-btn color="red" class="ms-auto" @click="click">{{ !confirm ? props.label || 'Delete' : 'Yes, delete' }}</v-btn>
+  <v-btn color="red" class="ms-auto" @click="click">{{ !confirm ? props.label || 'Delete' : (props.confirmLabel || 'Yes, delete') }}</v-btn>
 </template>
 
 <script setup>
 import {ref, watch} from 'vue';
 
 const emit = defineEmits(['delete'])
-const props = defineProps(['label'])
+const props = defineProps(['label', 'confirm-label'])
 const confirm = ref(false);
 
 watch(confirm, (val) => {
