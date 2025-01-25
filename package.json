@@ -1,6 +1,6 @@
 {
   "name": "ledger-leaf",
-  "version": "0.1.1b",
+  "version": "0.1.2b",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
@@ -16,6 +16,7 @@
     "papaparse": "^5.4.1",
     "roboto-fontface": "*",
     "vue": "^3.2.13",
+    "vue-google-charts": "^1.1.0",
     "vue-router": "^4.0.3",
     "vuetify": "^3.0.0-beta.0",
     "vuex": "^4.0.2",

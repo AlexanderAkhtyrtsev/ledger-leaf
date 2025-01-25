@@ -23,7 +23,7 @@ export default {
     }),
 
 
-    categories: (state) => {
+    categories: (state, getters) => {
         const sorted = state.categories
             // Normalize data
             .map(c => {
@@ -46,6 +46,7 @@ export default {
                 .filter((category) => category.parentId === parentId)
                 .map((category) => ({
                     ...category,
+                    parent: getters.getCategoryById(parentId),
                     children: buildTree(category.id),
                 }));
 
