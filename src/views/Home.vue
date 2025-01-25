@@ -1,9 +1,11 @@
 <template>
   <Welcome v-if="!auth.currentUser" />
   <div v-else>
-    <v-row>
+    <v-row style="position: sticky; top: 70px; z-index: 5;">
       <v-col cols="12">
-        <AccountsList />
+        <v-sheet class="pa-4 rounded-lg">
+            <AccountsList />
+        </v-sheet>
       </v-col>
     </v-row>
     <v-row>
