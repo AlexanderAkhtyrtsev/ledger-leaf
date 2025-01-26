@@ -2,47 +2,36 @@
   <v-container class="pa-0 ma-0">
     <v-card class="my-2">
       <v-card-title>
-        <h3>Total:</h3>
-        <div>-{{ formatCurrency(total, '') }}</div>
+        <h3>Totals:</h3>
+          <div v-if="totals.length" v-for="([currency, amount]) in totals"
+        >-{{ formatCurrency(amount, currency) }}</div>
       </v-card-title>
     </v-card>
 
-    <GeneralReport :data="data" />
+    <GeneralReport />
   </v-container>
 </template>
 
 <script setup>
-
-import {computed, ref} from 'vue';
-import store from '@/store';
 import {formatCurrency} from '../helpers';
 import GeneralReport from '@/views/reports/GeneralReport.vue';
+import {computed} from 'vue';
+import store from '@/store';
 
-const calculated = computed(() => {
-  return store.getters['database/transactions'].reduce( (sum, item) => {
-    if ( !item.category || item.amount >= 0 )
-      return sum;
 
-    let category = item.category;
+const totals = computed(() => {
+  return Object.entries(store.getters['database/transactions']
+      .reduce((sum, item) => {
+          if (!item.category || item.amount > 0) {
+            return sum;
+          }
 
-    while (category.parentId)
-      category = store.getters['database/getCategoryById'](category.parentId)
+          sum[item.account.currency] = (sum[item.account.currency] || 0) + Math.abs(item.amount);
 
-    sum[ category.name ] = (sum[ category.name ] || 0) + Math.abs(item.amount);
-
-    return sum;
-  }, {});
-})
-
-const total = computed(() => {
-  return Object.values(calculated.value).reduce((sum, n) => sum + n, 0);
+          return sum;
+      }, {})
+  )
 });
-
-const data = ref([
-      ['Category', 'Expenses',],
-      ...Object.entries(calculated.value)
-])
-
 
 </script>
 
