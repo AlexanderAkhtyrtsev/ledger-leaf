@@ -4,8 +4,11 @@
       class="mx-auto bg-blue-grey-darken-4"
       target="_blank"
       :title="account.name"
-      :subtitle="formatCurrency(account.remaining, account.currency) + ( account.note ? ' - ' + account.note : '' )"
   >
+    <template v-slot:subtitle>
+      <Currency :amount="+account.remaining" :currency="account.currency" />
+      {{ ( account.note ? ' - ' + account.note : '' ) }}
+    </template>
    <template v-slot:prepend>
      <v-icon size="x-large">{{ account.icon || 'mdi-wallet' }}</v-icon>
    </template>
@@ -13,7 +16,7 @@
 </template>
 
 <script setup>
-import {formatCurrency} from '@/helpers'
-
+import Currency from '@/views/components/unit/Currency.vue';
 const {account} = defineProps(['account']);
+
 </script>

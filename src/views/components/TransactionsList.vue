@@ -13,7 +13,9 @@
             </template>
             <template v-slot:append>
               <template  v-for="[currency, figure] in Object.entries(group.total)" >
-                <div style="color: red;font-weight: bolder;" class="ml-2" v-if="figure"> {{ formatCurrency(figure, currency) }}</div>
+                <div style="color: red;font-weight: bolder;" class="ml-2" v-if="figure">
+                  <Currency :amount="figure" :currency="currency" />
+                </div>
               </template>
             </template>
           </v-list-item>
@@ -35,7 +37,8 @@
 
             <template v-slot:append>
               <div :style="{ color: transaction.amount > 0 ? 'green' : 'red' }">
-                {{ transaction.amount > 0 ? '+' : '' }}{{ formatCurrency(transaction.amount, transaction.currency) }}
+                {{ transaction.amount > 0 ? '+' : '' }}
+                <Currency :amount="transaction.amount" :currency="transaction.currency" />
               </div>
             </template>
 
@@ -52,6 +55,7 @@ import {formatCurrency} from '@/helpers';
 import store from '@/store'
 import eventBus from '@/eventBus';
 import Search from '@/views/components/unit/Search.vue';
+import Currency from '@/views/components/unit/Currency.vue';
 
 const updateKey = ref(0);
 
