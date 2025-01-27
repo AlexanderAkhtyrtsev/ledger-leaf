@@ -11,6 +11,7 @@ export default {
         categories: [],
         transactions: [],
         expenses: {},
+        user: null,
         date: {
             start: DateTime.utc().startOf('month'),
             end: DateTime.utc(),

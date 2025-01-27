@@ -4,6 +4,7 @@ import transaction from '@/store/modules/database/actions/transaction';
 import {auth} from '@/firebase/auth';
 import {collection, getAggregateFromServer, query, sum, where} from 'firebase/firestore';
 import {db as firestore} from '@/firebase';
+import User from '@/firebase/models/User';
 
 export default {
     ...account,
@@ -12,10 +13,16 @@ export default {
 
     fetchData({ dispatch }) {
         return Promise.all([
+            dispatch('fetchUser'),
             dispatch('fetchAccounts').then(() => dispatch('getExpenses')),
             dispatch('fetchCategories'),
             dispatch('fetchTransactions'),
         ]);
+    },
+
+    fetchUser({state}) {
+        return User.find( auth.currentUser.uid )
+            .then( u => state.user = u );
     },
 
     async getExpenses({state, commit} ) {

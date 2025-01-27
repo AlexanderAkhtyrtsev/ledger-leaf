@@ -10,6 +10,10 @@ export default {
         });
     },
 
+    userSettings: (state) => key => state.user?.settings?.[key],
+
+    favouriteCurrency: (state, getters) => getters.userSettings('currency'),
+
     transactions: (state, getters) => state.transactions.map(transaction => {
         const category = getters['getCategoryById'](transaction.categoryId);
         const account = getters['getAccountById'](transaction.accountId);

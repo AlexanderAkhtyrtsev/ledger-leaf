@@ -37,6 +37,8 @@ watch(user, () => {
     return;
   }
 
+  store.dispatch('fetchCurrencyRates');
+
   store.dispatch('database/fetchData')
       .then(() => {
         loading.value = false;

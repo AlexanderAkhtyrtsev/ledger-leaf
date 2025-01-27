@@ -6,6 +6,7 @@ const store = createStore({
         return {
             user: undefined,
             errors: [],
+            currencyRates: {},
         }
     },
     mutations: {
@@ -16,7 +17,25 @@ const store = createStore({
     getters: {
         isAuthenticated(state) {
             return !!state.user;
+        },
+        calculateRateToFavourite: (state, getters) => (currency) => {
+            const favorite = getters['database/favouriteCurrency'];
+            const rates = state.currencyRates;
+
+            if (rates && favorite)
+                return (rates[favorite] * rates['USD']) / rates[currency];
+
+            return 0;
         }
+    },
+    actions: {
+        fetchCurrencyRates({state, commit}) {
+            fetch("https://api.exchangerate-api.com/v4/latest/USD")
+                .then((res) => res.json())
+                .then((data) => { state.currencyRates = data.rates; })
+                .catch(e => commit('addError', e.message || 'Unknown error'))
+            ;
+        },
     },
     modules: {
         database,
