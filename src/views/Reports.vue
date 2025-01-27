@@ -4,7 +4,7 @@
       <v-card-title>
         <h3>Totals:</h3>
           <div v-if="totals.length" v-for="([currency, amount]) in totals"
-        >-{{ formatCurrency(amount, currency) }}</div>
+        ><Currency :amount="-amount" :currency="currency" /></div>
       </v-card-title>
     </v-card>
 
@@ -13,10 +13,10 @@
 </template>
 
 <script setup>
-import {formatCurrency} from '../helpers';
 import GeneralReport from '@/views/reports/GeneralReport.vue';
 import {computed} from 'vue';
 import store from '@/store';
+import Currency from '@/views/components/unit/Currency.vue';
 
 
 const totals = computed(() => {
