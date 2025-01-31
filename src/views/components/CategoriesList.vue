@@ -21,6 +21,7 @@ import store from '@/store';
 import {computed, ref} from 'vue';
 import Category from '@/views/components/unit/Category.vue';
 import Search from '@/views/components/unit/Search.vue';
+import eventBus from '@/eventBus';
 
 const categories = computed(() => store.getters['database/categories'] );
 
@@ -39,26 +40,19 @@ const handleDragStart = (event) => {
 }
 
 const handleDrop = (event) => {
-  const target = event.target.closest('[data-category-id]');
+  const {data, type} = JSON.parse( event.dataTransfer.getData('text/plain') )
+  const targetCategory = event.target.closest('[data-category-id]');
 
-  if ( !srcElement.value ) return;
+  if ( type === 'account' && targetCategory ) {
+    event.stopPropagation();
 
-  const parentId = target?.dataset?.categoryId || null;
-  const id = srcElement.value.dataset.categoryId;
+    eventBus.emit('dropped-on-transaction', event)
 
-  srcElement.value = null;
-
-  if ( !id || id === parentId) return;
-
-  const srcCategory = store.getters['database/getCategoryById'](id);
-  const parentCategory = store.getters['database/getCategoryById'](parentId);
-
-  if ( parentCategory?.parentId === srcCategory.id ) return;
-
-  store.dispatch('database/updateCategory', {
-    id,
-    parentId
-  } )
+    eventBus.emit('create-transaction', {
+      categoryId: targetCategory.dataset.categoryId,
+      accountId: data.id,
+    })
+  }
 }
 
 

@@ -7,7 +7,7 @@
             type="number"
             v-model="model.sourceAmount"
             :label="`From ${source.name}`"
-            @input="() => { model.targetAmount = model.sourceAmount }"
+            @input="() => { model.targetAmount = store.getters.convertAmounts(source.currency, target.currency,  model.sourceAmount) }"
             autofocus
         >
           <template v-slot:append-inner>{{ source.currency }}</template>
@@ -53,8 +53,8 @@ const dialog = ref(true)
 const input = ref();
 
 const model = ref({
-  sourceAmount: 0,
-  targetAmount: 0,
+  sourceAmount: '',
+  targetAmount: '',
   note: '',
 })
 

@@ -31,7 +31,7 @@
 
 <script setup>
 import {useStore} from 'vuex';
-import {computed, ref} from 'vue';
+import {computed, onBeforeUnmount, onMounted, ref} from 'vue';
 import Account from '@/views/components/unit/Account.vue';
 import CreateTransfer from '@/views/components/modal/CreateTransfer.vue';
 import eventBus from '@/eventBus';
@@ -49,6 +49,7 @@ const handleDragStart = (event, data) => {
     data
   }))
 
+  dropped.value = false;
   srcAccount.value = data;
 }
 
@@ -74,4 +75,8 @@ const handleDrop = (event, account) => {
     })
   }
 }
+
+const preventDropOnTransaction = () => { srcAccount.value = null;}
+onMounted(() => { eventBus.on('dropped-on-transaction', preventDropOnTransaction) });
+onBeforeUnmount(() => { eventBus.off('dropped-on-transaction', preventDropOnTransaction) });
 </script>
