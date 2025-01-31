@@ -13,9 +13,7 @@ const isAuthenticated = computed(() => store.getters.isAuthenticated);
 
 const items = computed(() => [
   {title: 'Home', icon: 'mdi-home', to: '/', requiresAuth: false},
-  {title: 'Accounts', icon: 'mdi-account', to: '/accounts', requiresAuth: true},
   {title: 'Transactions', icon: 'mdi-cash', to: '/transactions', requiresAuth: true},
-  {title: 'Categories', icon: 'mdi-format-list-bulleted', to: '/categories', requiresAuth: true},
   {title: 'Reports', icon: 'mdi-chart-bar', to: '/reports', requiresAuth: true},
   {title: 'Settings', icon: 'mdi-cog', to: '/settings', requiresAuth: true},
   {title: 'Login', icon: 'mdi-login', to: '/login', requiresAuth: false, show: !isAuthenticated.value},
