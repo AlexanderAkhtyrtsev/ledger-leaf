@@ -15,7 +15,6 @@
               v-model="transaction.amount"
               label="Amount"
               type="number"
-              ref="amount"
               autofocus
               required
           >
@@ -170,7 +169,9 @@ onMounted(() => {
                                 ? transaction.value['date']['toDate']()
                                 : transaction.value['date'];
 
-    transaction.value['amount'] = Math.abs(transaction.value['amount']);
+    transaction.value['amount'] = transaction.value['amount']
+                                  ? Math.abs(transaction.value['amount'])
+                                  : transaction.value['amount'];
   };
 
   eventBus.on('plusBtnClicked', () => dialog.value = true );
