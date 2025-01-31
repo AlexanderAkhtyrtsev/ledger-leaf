@@ -34,6 +34,9 @@ export default {
                 c.parentId = c.parentId || null;
                 return c;
             })
+            .filter( c => {
+                return !c.archived;
+            })
             .sort((a, b) => {
             // Categories without parentId come first
             if (!a.parentId && b.parentId) return -1;

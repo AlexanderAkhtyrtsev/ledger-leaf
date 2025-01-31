@@ -1,14 +1,14 @@
 import FirestoreModel from '@/firebase/models/FirestoreModel';
 import {auth} from '@/firebase/auth';
-import store from '@/store';
 
 export default class Category extends FirestoreModel {
-    constructor({ id, name, type, icon, parentId, }) {
+    constructor({ id, name, type, icon, parentId, archived}) {
         super({
             id,
             name,
             type,
             icon,
+            archived,
             parentId,
         });
     }
@@ -20,6 +20,7 @@ export default class Category extends FirestoreModel {
     normalizedData() {
         return {
             ...this,
+            archived: +!!this.archived,
             parentId: this.parentId || null,
         }
     }
