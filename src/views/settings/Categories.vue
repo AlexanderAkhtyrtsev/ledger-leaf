@@ -1,6 +1,9 @@
 <template>
   <v-card>
-    <v-card-title>Categories</v-card-title>
+    <template v-slot:title>Categories</template>
+    <template v-slot:append>
+      <v-btn @click="eventBus.emit('add-category')"><v-icon>mdi-plus</v-icon></v-btn>
+    </template>
     <v-card-text>
       <v-list @dragover.prevent>
         <Category
@@ -20,9 +23,9 @@ import {computed, ref} from 'vue';
 import store from '@/store';
 import CreateCategory from '@/views/components/modal/CreateCategory.vue';
 import Category from '@/views/settings/unit/Category.vue';
+import eventBus from '@/eventBus';
 
 const categories = computed(() => store.getters['database/categories'] );
-
 
 const srcElement = ref();
 
@@ -39,7 +42,7 @@ const handleDragStart = (event) => {
 
 const handleDrop = (event) => {
   const target = event.target.closest('[data-category-id]');
-alert()
+
   if ( !srcElement.value ) return;
 
   const parentId = target?.dataset?.categoryId || null;
@@ -55,7 +58,7 @@ alert()
   if ( parentCategory?.parentId === srcCategory.id ) return;
 
   store.dispatch('database/updateCategory', {
-    id,
+    ...srcCategory,
     parentId
   } )
 }
