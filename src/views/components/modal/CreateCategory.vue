@@ -34,62 +34,54 @@
   </v-dialog>
 </template>
 
-<script>
+<script setup>
+import { ref, computed, onMounted } from 'vue';
+import { useStore } from 'vuex';
 import eventBus from '@/eventBus';
-import {categoryIcons, findIconByKeyword} from '@/helpers/categories-icons';
 import IconPicker from '@/views/components/unit/IconPicker.vue';
 
-export default {
-  components: {IconPicker},
-  data() {
-    return {
-      dialog: false, // Controls the modal visibility
-      categoryName: '',
-      icon: '',
-      type: '',
-      parentCategory: null, // ID of the parent category
-      formValid: false,
-      categoryTypes: ['must', 'need', 'want'], // Category types
-      requiredRule: value => !!value || 'This field is required',
-    };
-  },
-  computed: {
-    categories() {
-      return this.$store.state.database.categories;
-    },
-  },
-  methods: {
-    async createCategory() {
-      try {
-        this.$store.dispatch('database/createCategory', {
-          name: this.categoryName,
-          icon: this.icon,
-          type: this.type,
-          userId: this.$store.state.user.uid, // Link the category to the current user
-          parentId: this.parentCategory || null, // Link to parent category if selected
-          createdAt: new Date(),
-        })
-            .then( () => {
-              this.resetForm();
-              this.dialog = false;
-            })
-        ;
-      } catch (error) {
-        console.error('Error creating category:', error);
-      }
-    },
+const store = useStore();
 
-    resetForm() {
-      this.categoryName = '';
-      this.icon = '';
-      this.type = '';
-      this.parentCategory = null;
-    },
-  },
-  mounted() {
-    eventBus.on('plusBtnClicked', () => {
-      this.dialog = true;
+const dialog = ref(false);
+const categoryName = ref('');
+const icon = ref('');
+const type = ref('');
+const parentCategory = ref(null);
+const formValid = ref(false);
+const categoryTypes = ['must', 'need', 'want'];
+
+const requiredRule = value => !!value || 'This field is required';
+
+const categories = computed(() => store.state.database.categories);
+
+const createCategory = async () => {
+  try {
+    await store.dispatch('database/createCategory', {
+      name: categoryName.value,
+      icon: icon.value,
+      type: type.value,
+      userId: store.state.user.uid,
+      parentId: parentCategory.value || null,
+      createdAt: new Date(),
     });
+    resetForm();
+    dialog.value = false;
+  } catch (error) {
+    console.error('Error creating category:', error);
   }
 };
+
+const resetForm = () => {
+  categoryName.value = '';
+  icon.value = '';
+  type.value = '';
+  parentCategory.value = null;
+};
+
+onMounted(() => {
+  eventBus.on('add-category', () => {
+    dialog.value = true;
+  });
+});
 </script>
+
