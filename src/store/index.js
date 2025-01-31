@@ -26,6 +26,11 @@ const store = createStore({
                 return (rates[favorite] * rates['USD']) / rates[currency];
 
             return 0;
+        },
+        convertAmounts: (state) => (currencyFrom, currencyTo, amount) => {
+            const rates = state.currencyRates;
+            const converted = ((rates[currencyTo] * rates['USD']) / rates[currencyFrom]) * amount;
+            return +converted.toFixed(2);
         }
     },
     actions: {
