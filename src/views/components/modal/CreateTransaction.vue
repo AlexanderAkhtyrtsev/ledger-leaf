@@ -15,9 +15,11 @@
               v-model="transaction.amount"
               label="Amount"
               type="number"
+              ref="amount"
               autofocus
               required
           >
+            <template v-slot:append-inner>{{displayCurrency}}</template>
             <template v-slot:append>
               <v-btn-toggle v-model="transaction.type">
                 <v-btn value="expense" size="x-small" outlined class="rounded-lg">
@@ -124,6 +126,12 @@ const isFormValid = computed(() => {
 
 const categories = computed(() => store.state.database.categories);
 const accounts = computed(() => store.state.database.accounts);
+
+const displayCurrency = computed(() => {
+  return transaction.value.accountId
+         ? store.getters['database/getAccountById'] (transaction.value.accountId).currency
+         : store.getters['database/favouriteCurrency']
+});
 
 const submit = () => {
   const preparedData = { ...transaction.value }
