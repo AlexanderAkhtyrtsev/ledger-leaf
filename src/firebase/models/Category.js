@@ -2,6 +2,16 @@ import FirestoreModel from '@/firebase/models/FirestoreModel';
 import {auth} from '@/firebase/auth';
 
 export default class Category extends FirestoreModel {
+
+    /**
+     *
+     * @param {String} id
+     * @param {String} name
+     * @param {String} type - need, must or want
+     * @param {String} icon
+     * @param {String} parentId
+     * @param {Number|Boolean} archived
+     */
     constructor({ id, name, type, icon, parentId, archived}) {
         super({
             id,
