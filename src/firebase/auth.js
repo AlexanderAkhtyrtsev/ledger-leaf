@@ -10,16 +10,7 @@ import { GoogleAuthProvider } from "firebase/auth";
 
 export const provider = new GoogleAuthProvider();
 
-onAuthStateChanged(auth, (user) => {
-    store.state.user = user;
-
-    if (user) {
-        console.log("User is logged in:", user);
-    } else {
-        console.log("No user is logged in");
-    }
-});
-
+onAuthStateChanged(auth, user => store.state.user = user);
 
 export async function logout() {
     return signOut(auth)
