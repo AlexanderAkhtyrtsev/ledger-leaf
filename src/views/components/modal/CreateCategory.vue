@@ -3,10 +3,10 @@
   <v-dialog v-model="dialog" max-width="500px">
     <v-card>
       <v-card-title class="d-flex align-center">
-        <span>{{ category.id ? 'Edit Category: ' + category.name : 'Create Category'}}</span>
+        <div>{{ category.id ? 'Edit Category' : 'Create Category'}}</div>
         <v-spacer></v-spacer>
 
-        <v-menu>
+        <v-menu v-if="category.id">
           <template v-slot:activator="{ props }">
             <v-btn icon="mdi-dots-vertical" variant="text" v-bind="props"></v-btn>
           </template>
