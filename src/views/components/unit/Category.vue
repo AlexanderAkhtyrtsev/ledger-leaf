@@ -1,5 +1,5 @@
 <template>
-  <v-col cols="4" md="2" lg="1"
+  <v-col cols="4" md="2" lg="2" xl="1"
          :class="{ 'd-flex align-content-stretch pa-2': true }">
   <v-sheet
       @click="category.children.length ? emit('expand', !expand) : ''"
