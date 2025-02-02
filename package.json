@@ -1,6 +1,6 @@
 {
   "name": "ledger-leaf",
-  "version": "0.1.21b",
+  "version": "0.1.3b",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
