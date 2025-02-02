@@ -1,5 +1,7 @@
 <template>
   <v-container class="pa-0 ma-0">
+    <SwitchPeriod />
+
     <v-card class="my-2">
       <v-card-title>
         <h3>Totals:</h3>
@@ -17,6 +19,7 @@ import GeneralReport from '@/views/reports/GeneralReport.vue';
 import {computed} from 'vue';
 import store from '@/store';
 import Currency from '@/views/components/unit/Currency.vue';
+import SwitchPeriod from '@/views/components/unit/SwitchPeriod.vue';
 
 
 const totals = computed(() => {
