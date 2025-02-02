@@ -6,6 +6,8 @@ import Transaction from '@/firebase/models/Transaction';
 export default {
     async fetchTransactions({state, commit}) {
         try {
+            commit('startLoading', 'transactions');
+
             const loaded = await getTransactionsByPeriod( state.date.start, state.date.end );
             const concatenated = loaded.concat( state.transactions );
 
@@ -17,6 +19,8 @@ export default {
             console.error('Error fetching transactions:', error);
             commit('addError', error?.message, {root: true})
         }
+
+        commit('endLoading', 'transactions')
     },
     async createTransaction({state, commit}, transactionData) {
         const user = auth.currentUser;

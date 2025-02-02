@@ -2,7 +2,14 @@
   <div>
     <Search v-model="search" v-if="store.getters['database/transactions']?.length" />
 
-    <div v-if="groupedTransactions && groupedTransactions.length">
+    <v-skeleton-loader
+        v-if="loading"
+        v-for="i in 20"
+        type="list-item-three-line"
+        class="px-5"
+    ></v-skeleton-loader>
+
+    <div v-if="groupedTransactions?.length">
       <v-list lines="two"
               v-for="(group, index) in groupedTransactions" :key="index"
       >
@@ -46,7 +53,8 @@
         </v-list-item>
       </v-list>
     </div>
-    <v-card class="d-flex justify-center align-center" v-else>
+
+    <v-card class="d-flex justify-center align-center" v-if="!groupedTransactions?.length && !loading">
       <v-card-title>No transactions for this period.</v-card-title>
     </v-card>
   </div>
@@ -63,6 +71,8 @@ import Currency from '@/views/components/unit/Currency.vue';
 const updateKey = ref(0);
 
 const search = ref('');
+
+const loading = computed(() => store.getters['database/isLoading']('transactions'));
 
 const groupedTransactions = computed(() => {
   const grouped = {};

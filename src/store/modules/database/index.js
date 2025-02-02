@@ -12,6 +12,7 @@ export default {
         transactions: [],
         expenses: {},
         user: null,
+        loading: {},
         date: {
             start: DateTime.utc().startOf('month'),
             end: DateTime.utc(),

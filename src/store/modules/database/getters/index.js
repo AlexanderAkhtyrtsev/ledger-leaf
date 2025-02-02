@@ -65,5 +65,9 @@ export default {
                 }));
 
         return buildTree();
+    },
+
+    isLoading: (state) => key => {
+        return !!state.loading[key]
     }
 }

@@ -12,4 +12,10 @@ export default {
         state.date.end = state.date.start.endOf('month');
     },
 
+    startLoading( state, key ) {
+        state.loading[key] = true;
+    },
+    endLoading( state, key ) {
+        delete state.loading[key]
+    }
 }
