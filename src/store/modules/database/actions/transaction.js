@@ -12,7 +12,7 @@ export default {
             // Get only unique transactions
             const set = new Set( concatenated.map( t => t.id) )
 
-            state.transactions = concatenated.filter( t => set.has( t.id ) );
+            state.transactions = [...set].map( tId => concatenated.find( t2 => t2.id === tId ) )
         } catch (error) {
             console.error('Error fetching transactions:', error);
             commit('addError', error?.message, {root: true})
