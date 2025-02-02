@@ -45,6 +45,10 @@ watch(user, () => {
       })
       .catch(e => store.commit('addError', e.message))
       .finally(() => loading.value = false)
+
+  store.watch((state) => state.database.date, () => {
+    store.dispatch('database/fetchTransactions')
+  }, {deep: true})
 })
 
 

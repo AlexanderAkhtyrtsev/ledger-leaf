@@ -1,3 +1,5 @@
+import {DateTime} from 'luxon';
+
 export default {
     getCategoryById: state => id => state.categories.find(category => category.id === id),
     getAccountById: state => id => state.accounts.find(account => account.id === id),
@@ -14,7 +16,12 @@ export default {
 
     favouriteCurrency: (state, getters) => getters.userSettings('currency'),
 
-    transactions: (state, getters) => state.transactions.map(transaction => {
+    transactions: (state, getters) => state.transactions
+        .filter( t => {
+            const date = DateTime.fromJSDate( t.date.toDate() );
+            return date >= state.date.start && date <= state.date.end
+        } )
+        .map(transaction => {
         const category = getters['getCategoryById'](transaction.categoryId);
         const account = getters['getAccountById'](transaction.accountId);
 

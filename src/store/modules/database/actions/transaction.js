@@ -6,8 +6,13 @@ import Transaction from '@/firebase/models/Transaction';
 export default {
     async fetchTransactions({state, commit}) {
         try {
-            state.transactions = await getTransactionsByPeriod( state.date.start, state.date.end );
-            commit('shiftPeriod');
+            const loaded = await getTransactionsByPeriod( state.date.start, state.date.end );
+            const concatenated = loaded.concat( state.transactions );
+
+            // Get only unique transactions
+            const set = new Set( concatenated.map( t => t.id) )
+
+            state.transactions = concatenated.filter( t => set.has( t.id ) );
         } catch (error) {
             console.error('Error fetching transactions:', error);
             commit('addError', error?.message, {root: true})

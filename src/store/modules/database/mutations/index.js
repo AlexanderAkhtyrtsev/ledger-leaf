@@ -7,8 +7,9 @@ export default {
     ...accounts,
     ...categories,
 
-    shiftPeriod( state ) {
-        state.date.start = state.date.start.minus({ month: 1 }).startOf('month');
+    shiftPeriod( state, months = 1 ) {
+        state.date.start = state.date.start.minus({ month: months }).startOf('month');
         state.date.end = state.date.start.endOf('month');
     },
+
 }
