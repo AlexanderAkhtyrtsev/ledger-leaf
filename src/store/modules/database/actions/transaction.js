@@ -10,7 +10,7 @@ export default {
             commit('shiftPeriod');
         } catch (error) {
             console.error('Error fetching transactions:', error);
-            commit('addError', 'Error updating transaction:' + error?.message, {root: true})
+            commit('addError', error?.message, {root: true})
         }
     },
     async createTransaction({state, commit}, transactionData) {
