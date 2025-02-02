@@ -2,7 +2,7 @@
   <v-container class="pa-0 ma-0">
     <SwitchPeriod />
 
-    <v-card class="my-2">
+    <v-card class="my-2" v-if="totals.length">
       <v-card-title>
         <h3>Totals:</h3>
           <div v-if="totals.length" v-for="([currency, amount]) in totals"
@@ -10,7 +10,11 @@
       </v-card-title>
     </v-card>
 
-    <GeneralReport />
+    <GeneralReport v-if="totals.length" />
+
+    <v-card v-if="!totals.length" class="d-flex justify-center align-center">
+      <v-card-title>No reports fo this period.</v-card-title>
+    </v-card>
   </v-container>
 </template>
 
