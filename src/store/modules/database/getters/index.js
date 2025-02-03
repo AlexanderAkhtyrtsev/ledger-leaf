@@ -18,7 +18,7 @@ export default {
 
     transactions: (state, getters) => state.transactions
         .filter( t => {
-            const date = DateTime.fromJSDate( t.date.toDate() );
+            const date = DateTime.fromJSDate( t.date.toDate() ).toUTC();
             return date >= state.date.start && date <= state.date.end
         } )
         .map(transaction => {

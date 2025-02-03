@@ -15,7 +15,7 @@ export default {
         loading: {},
         date: {
             start: DateTime.utc().startOf('month'),
-            end: DateTime.utc(),
+            end: DateTime.utc().endOf('month'),
         }
     }),
 
