@@ -56,26 +56,53 @@
               required
           ></v-select>
 
-          <v-menu
-              v-model="menu"
-              :close-on-content-click="false"
-              transition="scale-transition"
-              offset-y
-              min-width="290px"
-          >
-            <template #activator="{ props }">
-              <v-text-field
-                  v-model="formattedDate"
-                  label="Date"
-                  readonly
-                  v-bind="props"
-              ></v-text-field>
-            </template>
-            <v-date-picker
-                v-model="transaction.date"
-                @input="menu = false"
-            ></v-date-picker>
-          </v-menu>
+          <v-row>
+            <v-col cols="8">
+              <v-menu
+                  v-model="menu"
+                  :close-on-content-click="false"
+                  transition="scale-transition"
+                  offset-y
+                  min-width="290px"
+              >
+                <template #activator="{ props }">
+                  <v-text-field
+                      v-model="formattedDate"
+                      label="Date"
+                      readonly
+                      v-bind="props"
+                  ></v-text-field>
+                </template>
+                <v-date-picker
+                    v-model="transaction.date"
+                    @input="menu = false"
+                ></v-date-picker>
+              </v-menu>
+            </v-col>
+            <v-col cols="4">
+              <v-menu
+                  v-model="timePickerMenu"
+                  :close-on-content-click="false"
+                  transition="scale-transition"
+                  offset-y
+                  min-width="290px"
+              >
+                <template #activator="{ props }">
+                  <v-text-field
+                      v-model="formattedTime"
+                      label="Date"
+                      readonly
+                      v-bind="props"
+                  ></v-text-field>
+                </template>
+                <v-time-picker
+                    v-model="time"
+                    format="24hr"
+                    @input="timePickerMenu = false"
+                ></v-time-picker>
+              </v-menu>
+            </v-col>
+          </v-row>
         </v-form>
 
         <v-card-actions v-if="transaction.id">
@@ -87,7 +114,7 @@
 </template>
 
 <script setup>
-import {onBeforeUnmount, onMounted, ref} from 'vue';
+import {onBeforeUnmount, onMounted, ref, watch} from 'vue';
 import {useStore} from 'vuex';
 import {computed} from 'vue';
 import eventBus from '@/eventBus';
@@ -96,9 +123,11 @@ import DeleteButton from '@/views/components/unit/DeleteButton.vue';
 
 const store = useStore()
 const dialog = ref(false);
-const menu = ref(false);
 
-const transaction = ref({
+const menu = ref(false);
+const timePickerMenu = ref(false);
+
+const defaultData = () => ({
   amount: null,
   categoryId: null,
   accountId: null,
@@ -116,7 +145,26 @@ const formattedDate = computed(() => {
           ? transaction.value.date.toDate()
           : transaction.value.date
       )
-      .toFormat('dd LLL yyyy HH:mm')
+      .toFormat('dd LLLL yyyy')
+})
+
+
+const formattedTime = computed(() => {
+  return DateTime
+      .fromJSDate(
+          transaction.value.date.toDate
+          ? transaction.value.date.toDate()
+          : transaction.value.date
+      )
+      .toFormat('HH:mm')
+})
+
+const time = ref(formattedTime.value);
+
+watch(time, (val) => {
+  const dt = DateTime.fromJSDate(transaction.value.date);
+
+  transaction.value.date = DateTime.fromSQL( dt.toFormat('yyyy-LL-dd') + ' ' + val ).toJSDate()
 })
 
 const isFormValid = computed(() => {
@@ -173,6 +221,8 @@ onMounted(() => {
     transaction.value['amount'] = transaction.value['amount']
                                   ? Math.abs(transaction.value['amount'])
                                   : transaction.value['amount'];
+
+    time.value = formattedTime.value;
   };
 
   eventBus.on('plusBtnClicked', () => {
