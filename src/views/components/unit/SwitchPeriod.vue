@@ -41,8 +41,8 @@ const isFullMonth = computed(() =>
         )
 );
 
-const selectedYear = ref(startDate.value.year);
-const selectedMonth = ref(startDate.value.month);
+const selectedYear = computed( () => startDate.value.year);
+const selectedMonth = computed( () => startDate.value.month);
 
 const years = Array.from({ length: 16 }, (_, i) => DateTime.now().year - i);
 

@@ -107,6 +107,7 @@ const transaction = ref({
   type: 'expense' // or income
 });
 
+const transaction = ref(defaultData());
 
 const formattedDate = computed(() => {
   return DateTime
@@ -174,7 +175,10 @@ onMounted(() => {
                                   : transaction.value['amount'];
   };
 
-  eventBus.on('plusBtnClicked', () => dialog.value = true );
+  eventBus.on('plusBtnClicked', () => {
+    transaction.value = defaultData();
+    dialog.value = true;
+  } );
 
   eventBus.on('create-transaction', pullData);
   eventBus.on('update-transaction', pullData);
