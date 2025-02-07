@@ -16,7 +16,7 @@
         <v-list-item>
           <template v-slot:prepend>
             <v-list-item-title >
-              {{ DateTime.fromJSDate(new Date(group.date)).toFormat('MMMM dd, yyyy') }}
+              <Date :model-value="new Date(group.date)" />
             </v-list-item-title>
           </template>
           <template v-slot:append>
@@ -67,6 +67,7 @@ import store from '@/store'
 import eventBus from '@/eventBus';
 import Search from '@/views/components/unit/Search.vue';
 import Currency from '@/views/components/unit/Currency.vue';
+import Date from '@/views/components/unit/Date.vue';
 
 const updateKey = ref(0);
 
