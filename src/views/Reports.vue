@@ -10,7 +10,15 @@
       </v-card-title>
     </v-card>
 
-    <GeneralReport v-if="totals.length" />
+    <v-row v-if="totals.length" class="align-content-stretch">
+      <v-col cols="12" lg="6">
+        <GeneralReport />
+      </v-col>
+      <v-col cols="12" lg="6">
+        <TopExpenses />
+      </v-col>
+    </v-row>
+
 
     <v-card v-if="!totals.length" class="d-flex justify-center align-center">
       <v-card-title>No reports fo this period.</v-card-title>
@@ -24,6 +32,7 @@ import {computed} from 'vue';
 import store from '@/store';
 import Currency from '@/views/components/unit/Currency.vue';
 import SwitchPeriod from '@/views/components/unit/SwitchPeriod.vue';
+import TopExpenses from '@/views/reports/TopExpenses.vue';
 
 
 const totals = computed(() => {
