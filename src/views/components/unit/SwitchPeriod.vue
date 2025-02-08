@@ -11,7 +11,7 @@
             </span>
 
             <v-btn flat
-                   :hidden="endDate.month === DateTime.utc().month"
+                   :hidden="endDate.toFormat('yyyy-LL') === DateTime.utc().toFormat('yyyy-LL')"
                    @click="prevMonth"
             ><v-icon>mdi-arrow-right</v-icon></v-btn>
           </v-card-title>
@@ -27,7 +27,7 @@
 </template>
 
 <script setup>
-import { computed, ref } from 'vue';
+import {computed, ref, watch} from 'vue';
 import { DateTime } from 'luxon';
 import store from '@/store';
 
@@ -41,16 +41,17 @@ const isFullMonth = computed(() =>
         )
 );
 
-const selectedYear = computed( () => startDate.value.year);
-const selectedMonth = computed( () => startDate.value.month);
+const selectedYear = ref( startDate.value.year);
+const selectedMonth = ref( startDate.value.month);
 
 const years = Array.from({ length: 16 }, (_, i) => DateTime.now().year - i);
 
 const months = computed(() => {
   const arr = [];
   let date = DateTime.fromObject({year: selectedYear.value , day: 1, month: 1});
+  const endDate = date.endOf('year') > DateTime.utc() ? DateTime.utc() : date.endOf('year');
 
-  while ( date <= DateTime.now() ) {
+  while ( date <= endDate ) {
     arr.push({ title: date.toFormat('LLLL'), value: date.month } )
     date = date.plus({month: 1});
   }
@@ -65,6 +66,11 @@ const nextMonth = () => {
 const prevMonth = () => {
   store.commit('database/shiftPeriod', -1)
 }
+
+watch(startDate, () => {
+  selectedYear.value = startDate.value.year;
+  selectedMonth.value = startDate.value.month;
+});
 
 const updateDate = () => {
   store.state.database.date.start = DateTime.utc(selectedYear.value, selectedMonth.value, 1);
