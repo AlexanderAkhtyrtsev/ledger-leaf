@@ -3,7 +3,13 @@
     <v-card-title>Expenses by Category</v-card-title>
 
     <v-card-text>
+      <v-skeleton-loader
+          v-if="loading"
+          height="240"
+          type="image, list-item-two-line"
+      />
       <GChart
+          v-if="!loading"
           v-for="([currency, chartData]) in Object.entries(calculated)"
           type="PieChart" :data="getData(chartData)" :options="options" />
     </v-card-text>
@@ -30,6 +36,7 @@ const options = ref({
   chartArea: {'width': '95%', 'height': '95%'},
 });
 
+const loading = computed(() => store.getters['database/isLoading']('transactions'));
 
 const calculated = computed(() => {
   return store.getters['database/transactions'].reduce( (sum, item) => {
