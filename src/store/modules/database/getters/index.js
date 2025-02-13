@@ -1,4 +1,4 @@
-import {DateTime} from 'luxon';
+import * as filters from '@/store/modules/database/filters/transactions';
 
 export default {
     getCategoryById: state => id => state.categories.find(category => category.id === id),
@@ -17,10 +17,9 @@ export default {
     favouriteCurrency: (state, getters) => getters.userSettings('currency'),
 
     transactions: (state, getters) => state.transactions
-        .filter( t => {
-            const date = DateTime.fromJSDate( t.date.toDate() ).toUTC();
-            return date >= state.date.start && date <= state.date.end
-        } )
+        .filter( filters.date )
+        .filter( filters.accounts )
+        .filter( filters.type )
         .map(transaction => {
         const category = getters['getCategoryById'](transaction.categoryId);
         const account = getters['getAccountById'](transaction.accountId);
@@ -33,6 +32,10 @@ export default {
         };
     }),
 
+    filtersApplied: (state) => {
+        return +(state.filters.accounts.length) +
+               +(state.filters.type !== '');
+    },
 
     categories: (state, getters) => {
         const sorted = state.categories

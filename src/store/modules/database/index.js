@@ -16,7 +16,11 @@ export default {
         date: {
             start: DateTime.utc().startOf('month'),
             end: DateTime.utc().endOf('month'),
-        }
+        },
+        filters: {
+            accounts: [],
+            type: '',
+        },
     }),
 
     actions,

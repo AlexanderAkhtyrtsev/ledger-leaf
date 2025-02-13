@@ -2,10 +2,17 @@
 import eventBus from '@/eventBus';
 import {useRoute} from 'vue-router';
 import {computed} from 'vue';
+import store from '@/store';
 
 const route = useRoute();
 
 const actionIcons = computed( () => [
+  {
+    name: 'filter',
+    icon: 'mdi-filter',
+    show: () => ['transactions'].includes(route.name),
+    badge: () => store.getters['database/filtersApplied'],
+  },
   {
     name: 'plus',
     icon: 'mdi-plus',
@@ -25,6 +32,12 @@ const actionIcons = computed( () => [
         icon
         @click="eventBus.emit(icon.name + 'BtnClicked')">
       <v-icon>{{icon.icon}}</v-icon>
+
+      <v-badge
+          v-if="icon.badge && icon.badge()"
+          :content="icon.badge()"
+          color="info"
+      ></v-badge>
     </v-btn>
   </v-app-bar>
 </template>
