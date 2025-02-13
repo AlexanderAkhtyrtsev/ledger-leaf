@@ -20,6 +20,19 @@ export const accounts = (transaction) => {
 }
 
 /**
+ * Filter transaction by account.
+ *
+ * @param transaction
+ * @returns {boolean}
+ */
+export const categories = (transaction) => {
+    const categories = store.state.database.filters.categories;
+
+    return !categories.length
+        || categories.includes( transaction.categoryId );
+}
+
+/**
  * Filter by transaction type: expense/income
  * @param t
  */

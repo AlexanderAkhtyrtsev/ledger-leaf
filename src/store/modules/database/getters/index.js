@@ -1,4 +1,5 @@
 import * as filters from '@/store/modules/database/filters/transactions';
+import {categories} from '@/store/modules/database/filters/transactions';
 
 export default {
     getCategoryById: state => id => state.categories.find(category => category.id === id),
@@ -20,6 +21,7 @@ export default {
         .filter( filters.date )
         .filter( filters.accounts )
         .filter( filters.type )
+        .filter( filters.categories )
         .map(transaction => {
         const category = getters['getCategoryById'](transaction.categoryId);
         const account = getters['getAccountById'](transaction.accountId);
@@ -33,7 +35,8 @@ export default {
     }),
 
     filtersApplied: (state) => {
-        return +(state.filters.accounts.length) +
+        return +(!!state.filters.accounts.length) +
+               +(!!state.filters.categories.length) +
                +(state.filters.type !== '');
     },
 

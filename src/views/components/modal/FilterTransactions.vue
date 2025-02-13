@@ -41,6 +41,40 @@
                 value="expense"
             ></v-radio>
           </v-radio-group>
+
+          <v-autocomplete
+              v-model="store.state.database.filters.categories"
+              :items="categories"
+              color="blue-grey-lighten-2"
+              label="Select"
+              item-title="name"
+              item-value="id"
+              chips
+              closable-chips
+              multiple
+          >
+            <template v-slot:chip="{ props, item }">
+              <v-chip
+                  v-bind="props"
+                  :text="item.raw.name"
+              >
+               <template v-slot:prepend>
+                 <v-icon>{{ item.raw.icon }}</v-icon>
+               </template>
+              </v-chip>
+            </template>
+
+            <template v-slot:item="{ props, item }">
+              <v-list-item
+                  v-bind="props"
+                  :title="item.raw.name"
+              >
+                <template v-slot:prepend>
+                  <v-icon>{{ item.raw.icon }}</v-icon>
+                </template>
+              </v-list-item>
+            </template>
+          </v-autocomplete>
         </v-card-text>
 
         <v-card-actions>
@@ -64,6 +98,7 @@ watch(dialog, (v) => {
 })
 
 const accounts = store.getters['database/accounts'];
+const categories = store.state.database.categories;
 
 const applyFilters = () => {
   dialog.value = false
