@@ -10,7 +10,7 @@ const actionIcons = computed( () => [
   {
     name: 'filter',
     icon: 'mdi-filter',
-    show: () => ['transactions'].includes(route.name),
+    show: () => ['transactions', 'reports'].includes(route.name),
     badge: () => store.getters['database/filtersApplied'],
   },
   {

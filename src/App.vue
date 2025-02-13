@@ -15,6 +15,9 @@
       <v-progress-linear v-if="loading" indeterminate color="primary" />
       <v-container v-else>
         <router-view />
+
+
+        <FilterTransactions v-if="showFilterDialog" @close="showFilterDialog = false" />
       </v-container>
     </v-main>
   </v-app>
@@ -25,6 +28,8 @@ import Sidebar from '@/views/components/Sidebar.vue';
 import AppBar from '@/views/components/AppBar.vue';
 import {computed, ref, watch} from 'vue';
 import store from '@/store';
+import FilterTransactions from '@/views/components/modal/FilterTransactions.vue';
+import eventBus from '@/eventBus';
 
 const loading = ref(true);
 const drawer = ref(false);
@@ -51,5 +56,8 @@ watch(user, () => {
   }, {deep: true})
 })
 
-
+const showFilterDialog = ref(false);
+eventBus.on('filterBtnClicked', () => {
+  showFilterDialog.value = true;
+})
 </script>
