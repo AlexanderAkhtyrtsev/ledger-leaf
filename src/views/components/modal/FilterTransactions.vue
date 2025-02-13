@@ -8,7 +8,7 @@
               lines="two"
               select-strategy="leaf"
           >
-            <v-list-subheader>Accounts</v-list-subheader>
+            <div class="text-subtitle-2 my-1">Accounts</div>
             <v-list-item
                 v-for="item in accounts"
                 :key="item.id"
@@ -24,6 +24,7 @@
             </v-list-item>
           </v-list>
 
+          <div class="text-subtitle-2 my-1">Type</div>
           <v-radio-group
               v-model="store.state.database.filters.type"
               inline
@@ -42,6 +43,7 @@
             ></v-radio>
           </v-radio-group>
 
+          <div class="text-subtitle-2 my-1">Categories</div>
           <v-autocomplete
               v-model="store.state.database.filters.categories"
               :items="categories"
