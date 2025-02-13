@@ -35,8 +35,8 @@ export default {
     }),
 
     filtersApplied: (state) => {
-        return +(!!state.filters.accounts.length) +
-               +(!!state.filters.categories.length) +
+        return +(!!state.filters.accounts?.length) +
+               +(!!state.filters.categories?.length) +
                +(state.filters.type !== '');
     },
 

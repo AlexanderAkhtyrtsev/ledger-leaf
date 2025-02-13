@@ -80,6 +80,7 @@
         </v-card-text>
 
         <v-card-actions>
+          <v-btn @click="resetFilters" v-if="store.getters['database/filtersApplied']" color="red">Reset</v-btn>
           <v-btn @click="applyFilters">Apply</v-btn>
         </v-card-actions>
       </v-card>
@@ -104,6 +105,14 @@ const categories = store.state.database.categories;
 
 const applyFilters = () => {
   dialog.value = false
+}
+
+const resetFilters = () => {
+  store.state.database.filters = {
+    categories: [],
+    accounts: [],
+    type: '',
+  }
 }
 </script>
 
