@@ -6,11 +6,15 @@ import {DateTime} from 'luxon';
 const model = defineModel();
 
 const formattedDate = computed(() => {
-  return DateTime.fromJSDate(
-      model.value instanceof Timestamp
-      ? model.value.toDate()
-      : model.value
-  ).toFormat('MMMM dd, yyyy').replace( ', ' + (new Date()).getFullYear(), '' )
+  const converted = model.value instanceof Timestamp
+                    ? model.value.toDate()
+                    : typeof model.value === 'string'
+                      ? new Date(model.value)
+                      : model.value
+
+  return DateTime.fromJSDate(converted)
+      .toFormat('MMMM dd, yyyy')
+      .replace( ', ' + (new Date()).getFullYear(), '' )
 })
 </script>
 

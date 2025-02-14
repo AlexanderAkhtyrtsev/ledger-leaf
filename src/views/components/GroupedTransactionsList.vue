@@ -16,7 +16,7 @@
         <v-list-item>
           <template v-slot:prepend>
             <v-list-item-title >
-              <Date :model-value="new Date(group.date)" />
+              <Date v-model="group.date" />
             </v-list-item-title>
           </template>
           <template v-slot:append>
