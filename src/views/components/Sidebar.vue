@@ -4,6 +4,9 @@ import {computed} from 'vue';
 import {useStore} from 'vuex';
 import {logout} from '@/firebase/auth';
 import {useRouter} from 'vue-router';
+import { useI18n } from 'vue-i18n';
+
+const {t} = useI18n()
 
 const store = useStore();
 const router = useRouter();
@@ -12,14 +15,14 @@ const isAuthenticated = computed(() => store.getters.isAuthenticated);
 
 
 const items = computed(() => [
-  {title: 'Home', icon: 'mdi-home', to: '/', requiresAuth: false},
-  {title: 'Transactions', icon: 'mdi-cash', to: '/transactions', requiresAuth: true},
-  {title: 'Reports', icon: 'mdi-chart-bar', to: '/reports', requiresAuth: true},
-  {title: 'Settings', icon: 'mdi-cog', to: '/settings', requiresAuth: true},
-  {title: 'Login', icon: 'mdi-login', to: '/login', requiresAuth: false, show: !isAuthenticated.value},
-  {title: 'About', icon: 'mdi-information-variant', to: '/about'},
+  { title: t('Home'), icon: 'mdi-home', to: '/', requiresAuth: false},
+  { title: t('Transactions'), icon: 'mdi-cash', to: '/transactions', requiresAuth: true},
+  { title: t('Reports'), icon: 'mdi-chart-bar', to: '/reports', requiresAuth: true},
+  { title: t('Settings'), icon: 'mdi-cog', to: '/settings', requiresAuth: true},
+  { title: t('Login'), icon: 'mdi-login', to: '/login', requiresAuth: false, show: !isAuthenticated.value},
+  { title: t('About'), icon: 'mdi-information-variant', to: '/about'},
   {
-    title: 'Logout',
+    title: t('Logout'),
     icon: 'mdi-logout',
     to: 'logout',
     requiresAuth: true,

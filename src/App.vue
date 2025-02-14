@@ -9,7 +9,7 @@
           v-for="error in store.state.errors"
           :model-value="true"
       >
-        {{ error || 'Unknown Error' }}
+        {{ error || t('Unknown Error') }}
       </v-snackbar>
 
       <v-progress-linear v-if="loading" indeterminate color="primary" />
@@ -30,6 +30,9 @@ import {computed, ref, watch} from 'vue';
 import store from '@/store';
 import FilterTransactions from '@/views/components/modal/FilterTransactions.vue';
 import eventBus from '@/eventBus';
+import {useI18n} from 'vue-i18n';
+
+const {t} = useI18n();
 
 const loading = ref(true);
 const drawer = ref(false);
