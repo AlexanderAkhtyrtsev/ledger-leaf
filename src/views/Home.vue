@@ -1,5 +1,5 @@
 <template>
-  <Welcome v-if="!auth.currentUser" />
+  <Welcome v-if="!store.state.database.user" />
   <div v-else>
     <v-row style="position: sticky; top: 70px; z-index: 5;">
       <v-col cols="12">
@@ -18,7 +18,7 @@
 </template>
 
 <script setup>
-import {auth} from '@/firebase/auth';
+import store from '@/store';
 import AccountsList from '@/views/components/AccountsList.vue';
 import CategoriesList from '@/views/components/CategoriesList.vue';
 import {defineAsyncComponent} from 'vue';

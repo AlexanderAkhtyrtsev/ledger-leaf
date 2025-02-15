@@ -16,6 +16,7 @@ export async function logout() {
     return signOut(auth)
         .then(() => {
             console.log('User logged out');
+            store.state.database.user = null;
             return true;
         })
         .catch((error) => {
