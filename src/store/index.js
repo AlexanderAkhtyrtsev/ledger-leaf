@@ -34,12 +34,28 @@ const store = createStore({
         }
     },
     actions: {
-        fetchCurrencyRates({state, commit}) {
+        fetchCurrencyRates({ state, commit }) {
+            const cacheKey = "currencyRates";
+            const cacheTimeKey = "currencyRatesTimestamp";
+            const cacheExpiration = 24 * 60 * 60 * 1000; // 24 hours in milliseconds
+
+            const storedRates = localStorage.getItem(cacheKey);
+            const storedTimestamp = localStorage.getItem(cacheTimeKey);
+
+            if (storedRates && storedTimestamp && Date.now() - storedTimestamp < cacheExpiration) {
+                state.currencyRates = JSON.parse(storedRates);
+                console.log('Currency Rates were retrieved from cache.')
+                return;
+            }
+
             fetch("https://api.exchangerate-api.com/v4/latest/USD")
                 .then((res) => res.json())
-                .then((data) => { state.currencyRates = data.rates; })
-                .catch(e => commit('addError', e.message || 'Unknown error'))
-            ;
+                .then((data) => {
+                    state.currencyRates = data.rates;
+                    localStorage.setItem(cacheKey, JSON.stringify(data.rates));
+                    localStorage.setItem(cacheTimeKey, Date.now().toString());
+                })
+                .catch((e) => commit("addError", e.message || "Unknown error"));
         },
     },
     modules: {
