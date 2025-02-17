@@ -10,8 +10,7 @@
       />
       <GChart
           v-if="!loading"
-          v-for="([currency, chartData]) in Object.entries(calculated)"
-          type="PieChart" :data="getData(chartData)" :options="options" />
+          type="PieChart" :data="getData(calculated)" :options="options" />
     </v-card-text>
   </v-card>
 </template>
@@ -39,18 +38,19 @@ const options = ref({
 const loading = computed(() => store.getters['database/isLoading']('transactions'));
 
 const calculated = computed(() => {
-  return store.getters['database/transactions'].reduce( (sum, item) => {
-    if ( !item.category || item.amount >= 0 )
-      return sum;
-
-    const pivot = sum[ item.account.currency ] = (sum[ item.account.currency ] || {});
-
+  return store.getters['database/expenses'].reduce( (sum, item) => {
     let category = item.category;
 
     while (category.parentId)
       category = store.getters['database/getCategoryById'](category.parentId)
 
-    pivot[ category.name ] = (pivot[ category.name ] || 0) + Math.abs(item.amount);
+    const amount = store.getters.convertAmounts(
+        item.account.currency,
+        store.getters['database/favouriteCurrency'],
+        Math.abs(item.amount)
+    )
+
+    sum[ category.name ] = (sum[ category.name ] || 0) + amount;
 
     return sum;
   }, {});

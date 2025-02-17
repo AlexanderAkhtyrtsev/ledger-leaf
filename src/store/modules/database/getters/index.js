@@ -34,6 +34,14 @@ export default {
         };
     }),
 
+    expenses: (state, getters) => {
+      return getters.transactions.filter( t => t.categoryId && t.amount < 0 )
+    },
+
+    incomes: (state, getters) => {
+      return getters.transactions.filter( t => t.categoryId && t.amount > 0 )
+    },
+
     filtersApplied: (state) => {
         return +(!!state.filters.accounts?.length) +
                +(!!state.filters.categories?.length) +
