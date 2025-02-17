@@ -120,8 +120,10 @@ import {computed} from 'vue';
 import eventBus from '@/eventBus';
 import {DateTime} from 'luxon';
 import DeleteButton from '@/views/components/unit/DeleteButton.vue';
+import {useRoute} from 'vue-router';
 
 const store = useStore()
+const route = useRoute();
 const dialog = ref(false);
 
 const menu = ref(false);
@@ -225,7 +227,8 @@ onMounted(() => {
     time.value = formattedTime.value;
   };
 
-  eventBus.on('plusBtnClicked', () => {
+
+  route.name !== 'home' && eventBus.on('plusBtnClicked', () => {
     transaction.value = defaultData();
     dialog.value = true;
   } );
@@ -235,7 +238,7 @@ onMounted(() => {
 })
 
 onBeforeUnmount(() => {
-  eventBus.off('plusBtnClicked');
+  route.name !== 'home' && eventBus.off('plusBtnClicked');
   eventBus.off('create-transaction');
   eventBus.off('update-transaction');
 });

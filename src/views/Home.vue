@@ -12,6 +12,7 @@
       <v-col cols="12">
         <CategoriesList />
         <CreateTransaction />
+        <CreateAccount />
       </v-col>
     </v-row>
   </div>
@@ -23,6 +24,7 @@ import AccountsList from '@/views/components/AccountsList.vue';
 import CategoriesList from '@/views/components/CategoriesList.vue';
 import {defineAsyncComponent} from 'vue';
 import CreateTransaction from '@/views/components/modal/CreateTransaction.vue';
+import CreateAccount from '@/views/components/modal/CreateAccount.vue';
 
 const Welcome = defineAsyncComponent( () => import( '@/views/components/Welcome.vue' ) );
 

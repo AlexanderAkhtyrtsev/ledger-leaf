@@ -16,7 +16,7 @@ const actionIcons = computed( () => [
   {
     name: 'plus',
     icon: 'mdi-plus',
-    show: () => ['accounts', 'transactions', 'categories'].includes(route.name),
+    show: () => ['home', 'transactions', 'categories'].includes(route.name),
   },
 ].filter( icon => icon.show ? icon.show() : true) );
 

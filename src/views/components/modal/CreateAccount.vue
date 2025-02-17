@@ -4,6 +4,7 @@
       <v-card-title class="d-flex justify-space-between align-center">
         <span>{{ account.id ? 'Edit Account' : 'Create Account'}}</span>
         <v-card-actions>
+          <v-btn text color="red" @click="dialog = false">Cancel</v-btn>
           <v-btn text color="primary" :disabled="!formValid" @click="submit">Save</v-btn>
         </v-card-actions>
       </v-card-title>
@@ -71,7 +72,7 @@ const account = ref( {... accountDefaultValue} );
 const formValid = ref(false);
 const currencies = ref(['USD', 'EUR', 'GBP', 'UAH']);
 
-const requiredRule = value => String(value).length || 'This field is required';
+const requiredRule = value => !!String(value).length || 'This field is required';
 const amountRule = v => !isNaN(v) || 'Amount must be a number';
 
 const submit = async () => {
@@ -115,7 +116,6 @@ const handlePlusBtnClick = () => {
 
 onMounted(() => {
   const pullData = (accountData) => {
-    console.log(accountData)
     dialog.value = true;
 
     for(const p in accountData) {
