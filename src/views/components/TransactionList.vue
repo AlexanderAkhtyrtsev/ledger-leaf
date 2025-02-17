@@ -1,6 +1,7 @@
 <template>
-  <v-list lines="two" v-if="transactionList.length" density="compact">
+  <v-list lines="two" class="px-0" v-if="transactionList.length" density="compact">
     <v-list-item
+        class="px-0"
         v-for="transaction in transactionList"
         :key="transaction.id"
     >
@@ -12,7 +13,7 @@
       </v-list-item-subtitle>
 
       <template v-slot:prepend>
-        <v-avatar>
+        <v-avatar class="px-0">
           <v-icon>{{ transaction.category?.icon }}</v-icon>
         </v-avatar>
       </template>
@@ -20,7 +21,7 @@
       <template v-slot:append>
         <div :style="{ color: transaction.amount > 0 ? 'green' : 'red' }">
           {{ transaction.amount > 0 ? '+' : '' }}
-          <Currency :amount="transaction.amount" :currency="transaction.currency" />
+          <Currency :amount="transaction.amount" :currency="transaction.currency" style="font-size: 90%;" />
         </div>
       </template>
     </v-list-item>
